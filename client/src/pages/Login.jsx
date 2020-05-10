@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 
 const Login = (props) => {
   const history = useHistory();
@@ -41,15 +42,26 @@ const Login = (props) => {
     }
   };
 
+  const Input = styled.input`
+    width: 200px;
+    height: 50px;
+  `;
+
+  const inputStyle = {
+    width: '400px',
+    height: '100px',
+  };
+
   return (
     <div>
       <form onSubmit={onLogin}>
-        <input
+        <Input
           type="text"
           placeholder="Email"
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
+          style={inputStyle}
           type="password"
           placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
