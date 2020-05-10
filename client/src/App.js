@@ -11,6 +11,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 const App = () => {
   const [auth, setAuth] = React.useState(false);
+  
   return (
     <React.Fragment>
       <Router>
