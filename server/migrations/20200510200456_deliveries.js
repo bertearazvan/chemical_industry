@@ -6,8 +6,8 @@ exports.up = function (knex) {
     table.integer('truck_id').unsigned().notNullable();
     table.foreign('truck_id').references('trucks.id');
 
-    table.integer('to_warehouse_delivery').unsigned().notNullable();
-    table.integer('from_warehouse_pickup').unsigned().notNullable();
+    table.integer('to_warehouse_delivery').unsigned().defaultTo(null);
+    table.integer('from_warehouse_pickup').unsigned().defaultTo(null);
 
     table.timestamp('date_left').defaultTo(null);
     table.timestamp('date_arrival').defaultTo(null);
@@ -16,8 +16,8 @@ exports.up = function (knex) {
     table.integer('status_id').unsigned().notNullable();
     table.foreign('status_id').references('delivery_statuses.id');
 
-    table.integer('case_hander').unsigned().notNullable();
-    table.foreign('case_hander').references('users.id');
+    table.integer('case_handler').unsigned().notNullable();
+    table.foreign('case_handler').references('users.id');
 
     table.integer('drivers_backlog_id').unsigned().notNullable();
     table.foreign('drivers_backlog_id').references('drivers_backlog.id');
