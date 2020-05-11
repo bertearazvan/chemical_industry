@@ -1,9 +1,9 @@
 exports.up = function (knex) {
   return knex.schema.createTable('depots', (table) => {
     table.increments('id');
-    table.string('city');
-    table.string('country');
-    table.string('total_warehouses');
+    table.string('city').notNullable();
+    table.string('country').notNullable();
+    table.integer('total_warehouses').unsigned().notNullable();
   });
 };
 

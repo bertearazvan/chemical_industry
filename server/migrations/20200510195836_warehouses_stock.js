@@ -5,7 +5,7 @@ exports.up = function (knex) {
     table.unique(['warehouse_id', 'chemical_id']);
     table.foreign('warehouse_id').references('warehouses.id');
     table.foreign('chemical_id').references('chemicals.id');
-    table.integer('storage_amount');
+    table.integer('storage_amount').notNullable();
   });
 };
 

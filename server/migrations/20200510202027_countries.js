@@ -1,8 +1,8 @@
 exports.up = function (knex) {
   return knex.schema.createTable('countries', (table) => {
     table.increments('id');
-    table.integer('name');
-    table.integer('continent');
+    table.string('name').notNullable();
+    table.string('continent').notNullable();
   });
 };
 
