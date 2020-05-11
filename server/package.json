@@ -11,7 +11,8 @@
     "express-rate-limit": "5.1.3",
     "knex": "0.21.1",
     "mysql2": "2.1.0",
-    "objection": "2.1.3"
+    "objection": "2.1.3",
+    "uuid": "^8.0.0"
   },
   "scripts": {
     "m:make": "knex migrate:make",

@@ -3,9 +3,6 @@ exports.up = function (knex) {
     table.increments('id');
     table.string('ticket_no').unique();
 
-    table.integer('truck_id').unsigned().notNullable();
-    table.foreign('truck_id').references('trucks.id');
-
     table.integer('to_warehouse_delivery').unsigned().defaultTo(null);
     table.integer('from_warehouse_pickup').unsigned().defaultTo(null);
 
