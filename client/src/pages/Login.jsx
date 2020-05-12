@@ -3,6 +3,12 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
+const Input = styled.input`
+  width: 200px;
+  height: 50px;
+  margin-top: 100px;
+`;
+
 const Login = (props) => {
   const history = useHistory();
 
@@ -41,11 +47,6 @@ const Login = (props) => {
       setMessage(err.response.data.response);
     }
   };
-
-  const Input = styled.input`
-    width: 200px;
-    height: 50px;
-  `;
 
   const inputStyle = {
     width: '400px',
