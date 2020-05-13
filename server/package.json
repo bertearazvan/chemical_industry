@@ -12,7 +12,8 @@
     "knex": "0.21.1",
     "mysql2": "2.1.0",
     "objection": "2.1.3",
-    "uuid": "^8.0.0"
+    "uuid": "^8.0.0",
+    "jsonwebtoken": "8.5.1"
   },
   "scripts": {
     "m:make": "knex migrate:make",
@@ -20,7 +21,7 @@
     "m:rollback": "knex migrate:rollback",
     "s:make": "knex seed:make",
     "s:run": "knex seed:run",
-    "start-dev": "cross-env PORT=9090 nodemon server.js",
+    "start-dev": "cross-env PORT=9090 npx nodemon server.js",
     "start-prod": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

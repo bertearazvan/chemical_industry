@@ -1,9 +1,14 @@
-const router = require("express").Router();
-
-const User = require("../models/User");
-
-const bcrypt = require("bcrypt");
+const router = require('express').Router();
+// Models
+const User = require('../models/User');
+const Token = require('../models/Token');
+// Bcrypt
+const bcrypt = require('bcrypt');
 const saltRounds = 10;
+// JWT
+const jwt = require('jsonwebtoken');
+// Middleware
+const { isAuthenticated } = require('../middleware/auth');
 
 // bcrypt.hash("password", saltRounds, (error, hashedPassword) => {
 //     if (error) {
@@ -19,7 +24,7 @@ const saltRounds = 10;
 //     console.log("it is the same? ", isSame);
 // })
 
-router.post("/users/login", async (req, res) => {
+router.post('/users/login', async (req, res) => {
   console.log(req.body);
   const { email, password } = req.body;
 
@@ -35,41 +40,76 @@ router.post("/users/login", async (req, res) => {
       console.log(user);
       if (!user) {
         return res.status(404).send({
-          response: "Wrong username",
+          response: 'Wrong username',
         });
       }
 
-      bcrypt.compare(password, user.password, (error, isSame) => {
+      bcrypt.compare(password, user.password, async (error, isSame) => {
         if (error) {
           return res
             .status(500)
-            .send({ response: "There was an error when crypting the data" });
+            .send({ response: 'There was an error when crypting the data' });
         }
         //   console.log(isSame);
-        user.password = "";
+        user.password = '';
         if (!isSame) {
           return res.status(404).send({
-            response: "Wrong password",
+            response: 'Wrong password',
           });
         } else {
           sess = user;
 
+          const token = jwt.sign(
+            {
+              userId: user.id,
+              email: user.email,
+            },
+            'mysecretkey'
+          );
+
+          const previousToken = await Token.query()
+            .select()
+            .where({
+              user_id: user.id,
+            })
+            .limit(1);
+
+          if (!previousToken[0]) {
+            await Token.query().insert({
+              token,
+              ttl: 3600000,
+              user_id: user.id,
+            });
+          } else {
+            await Token.query()
+              .where({
+                user_id: user.id,
+              })
+              .del();
+            await Token.query().insert({
+              token,
+              ttl: 3600000,
+              user_id: user.id,
+            });
+          }
+
           return res.status(200).send({
             response: user,
+            token,
           });
         }
       });
     } catch (err) {
-      res.status(400).send({ response: "Something went wrong" });
+      res.status(400).send({ response: 'Something went wrong' });
     }
   } else {
     return res.status(400).send({
-      response: "Username or password not defined",
+      response: 'Username or password not defined',
     });
   }
 });
 
-router.post("/users/register", (req, res) => {
+router.post('/users/register', (req, res) => {
   const { email, password, firstName, lastName, repeatPassword } = req.body;
 
   if (
@@ -82,14 +122,14 @@ router.post("/users/register", (req, res) => {
   ) {
     if (password.length < 8) {
       return res.status(400).send({
-        response: "Password is too short",
+        response: 'Password is too short',
       });
     } else {
       bcrypt.hash(password, saltRounds, async (error, hashedPassword) => {
         if (error) {
           return res
             .status(500)
-            .send({ response: "There was an error when crypting the data" });
+            .send({ response: 'There was an error when crypting the data' });
         }
 
         try {
@@ -102,7 +142,7 @@ router.post("/users/register", (req, res) => {
 
           if (existingUser[0]) {
             return res.status(404).send({
-              response: "User already exists",
+              response: 'User already exists',
             });
           } else {
             const newUser = await User.query()
@@ -123,12 +163,12 @@ router.post("/users/register", (req, res) => {
           }
         } catch (err) {
           console.log(err);
-          return res.status(500).send({ response: "Something went wrong" });
+          return res.status(500).send({ response: 'Something went wrong' });
         }
       });
     }
   } else {
-    return res.status(404).send({ response: "Missing fields" });
+    return res.status(404).send({ response: 'Missing fields' });
   }
 });
 
