@@ -7,18 +7,20 @@ const isAuthenticated = async (req, res, next) => {
 
   const token = req.headers.authorization;
 
-  if (!token || token.length) {
-    return next(error);
+  if (!token) {
+    return res.status(401).send({ response: 'Not authorized' });
   }
 
   const data = jwt.verify(token.replace('Bearer ', ''), 'mysecretkey');
+
   if (!data) {
-    return next(error);
+    return res.status(401).send({ response: 'Not authorized' });
   }
 
-  const tokenFound = await Token.query().select().where({ token });
+  const tokenFound = await Token.query().select().where({ token: token });
+  console.log(token, tokenFound[0]);
   if (!tokenFound[0]) {
-    return next(error);
+    return res.status(401).send({ response: 'Not authorized' });
   }
 
   const comparisonDate = new Date();
@@ -27,7 +29,7 @@ const isAuthenticated = async (req, res, next) => {
     tokenFound[0].created_at.getTime() + tokenFound[0].ttl <
     comparisonDate.getTime()
   ) {
-    return next(error);
+    return res.status(401).send({ response: 'Not authorized' });
   } else {
     req.userId = tokenFound[0].user_id;
     return next();
