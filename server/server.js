@@ -1,9 +1,9 @@
-const express = require("express");
-const cors = require("cors");
+const express = require('express');
+const cors = require('cors');
 const app = express();
 
 // ##### Middleware #####
-app.set("trust proxy", 1);
+app.set('trust proxy', 1);
 app.use(cors());
 app.use(
   express.urlencoded({
@@ -15,20 +15,22 @@ app.use(express.json());
 // ##################
 
 // ##### Routes #####
-const usersRoute = require("./routes/users");
+const usersRoute = require('./routes/users');
+const warehousesRoute = require('./routes/warehouses');
 app.use(usersRoute);
+app.use(warehousesRoute);
 
-app.get("/", (req, res) => {
-  res.status(200).send({ response: "Responsive route" });
+app.get('/', (req, res) => {
+  res.status(200).send({ response: 'Responsive route' });
 });
 
 // ##################
 
 // ##### Models and knex #####
 
-const { Model } = require("objection");
-const Knex = require("knex");
-const knexFile = require("./knexFile.js");
+const { Model } = require('objection');
+const Knex = require('knex');
+const knexFile = require('./knexFile.js');
 
 const knex = Knex(knexFile.development);
 
