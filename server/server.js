@@ -17,8 +17,10 @@ app.use(express.json());
 // ##### Routes #####
 const usersRoute = require('./routes/users');
 const warehousesRoute = require('./routes/warehouses');
+const deliveriesRoute = require('./routes/deliveries');
 app.use(usersRoute);
 app.use(warehousesRoute);
+app.use(deliveriesRoute);
 
 app.get('/', (req, res) => {
   res.status(200).send({ response: 'Responsive route' });
