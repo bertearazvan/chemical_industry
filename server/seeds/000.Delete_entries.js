@@ -6,6 +6,9 @@ exports.seed = function (knex) {
       return knex('deliveries').del();
     })
     .then(() => {
+      return knex('delivery_types').del();
+    })
+    .then(() => {
       return knex('tokens').del();
     })
     .then(() => {

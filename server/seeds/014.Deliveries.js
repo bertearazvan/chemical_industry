@@ -13,6 +13,7 @@ exports.seed = async (knex) => {
       case_handler: users[1].id,
       drivers_backlog_id: drivers_backlog[0].id,
       company_id: 2,
+      delivery_type: 1,
     },
     {
       ticket_no: uuidv4(),
@@ -21,6 +22,7 @@ exports.seed = async (knex) => {
       case_handler: users[2].id,
       drivers_backlog_id: drivers_backlog[1].id,
       company_id: 3,
+      delivery_type: 2,
     },
     {
       ticket_no: uuidv4(),
@@ -29,6 +31,7 @@ exports.seed = async (knex) => {
       case_handler: users[6].id,
       drivers_backlog_id: drivers_backlog[2].id,
       company_id: 3,
+      delivery_type: 2,
     },
     {
       ticket_no: uuidv4(),
@@ -37,6 +40,7 @@ exports.seed = async (knex) => {
       case_handler: users[6].id,
       drivers_backlog_id: drivers_backlog[4].id,
       company_id: 2,
+      delivery_type: 1,
     },
   ]);
 };
