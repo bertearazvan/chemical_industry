@@ -25,6 +25,7 @@ const getDataDeliveries = async (req, res, next) => {
         'warehouse_stocks.storage_amount',
         'warehouses.current_total_storage as warehouse_current_storage',
         'warehouses.storage_total_capacity as warehouse_total_capacity',
+        'chemicals.id as chemical_id',
         'chemicals.name as chemical',
         'warehouses.position as warehouse_number',
         'depot_id',
@@ -72,6 +73,7 @@ const getDataDeliveries = async (req, res, next) => {
             {
               chemical: group[j][i][0].chemical,
               storage: group[j][i][0].storage_amount,
+              id: group[j][i][0].chemical_id,
             },
           ];
 
@@ -101,11 +103,13 @@ const getDataDeliveries = async (req, res, next) => {
                 accumulator.chemicals || {
                   chemical: accumulator.chemical,
                   storage: accumulator.storage_amount,
+                  id: accumulator.chemical_id,
                 },
               ],
               {
                 chemical: warehouse.chemical,
                 storage: warehouse.storage_amount,
+                id: warehouse.chemical_id,
               },
             ];
 
