@@ -65,7 +65,7 @@ const getDataDeliveries = async (req, res, next) => {
 
       // here we have a for loop that loops through all the warehouses individually
       for (let i = 1; i <= Object.keys(group[j]).length; i++) {
-        console.log(group[j][i]);
+        // console.log(group[j][i]);
         // reduce() does not work on arrays of 1 elements apparently
         // so we need to do it manually in the one that have quality
         if (group[j][i].length === 1) {

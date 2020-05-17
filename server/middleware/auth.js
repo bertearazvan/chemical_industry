@@ -18,7 +18,7 @@ const isAuthenticated = async (req, res, next) => {
   }
 
   const tokenFound = await Token.query().select().where({ token: token });
-  console.log(token, tokenFound[0]);
+  // console.log(token, tokenFound[0]);
   if (!tokenFound[0]) {
     return res.status(401).send({ response: 'Not authorized' });
   }
