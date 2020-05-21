@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -26,7 +26,24 @@ const ButtonPosition = styled.div`
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const history = useHistory();
+
+  const checkedLoggedIn = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setAuthToken(token);
+    }
+    return token ? true : false;
+  };
+
+  useEffect(() => {
+    setIsLoggedIn(checkedLoggedIn);
+  }, []);
+
+  if (isLoggedIn) {
+    history.push('/home');
+  }
 
   const loginUser = async () => {
     try {
