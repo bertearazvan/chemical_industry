@@ -3,7 +3,7 @@ exports.seed = async (knex) => {
   // Inserts seed entries
   return knex('users').insert([
     {
-      email: 'anders@chem.com',
+      username: 'anders',
       password: '$2b$10$.4cXctESTDCJfTvOZcXe/OHM1VpW93b/OgCdB.xJNeKSyHxDmw9vy',
       first_name: 'Anders',
       last_name: 'Latif',
@@ -11,7 +11,7 @@ exports.seed = async (knex) => {
       depot_id: warehouses[0].depot_id,
     },
     {
-      email: 'steven@chem.com',
+      username: 'steven',
       password: '$2b$10$.4cXctESTDCJfTvOZcXe/OHM1VpW93b/OgCdB.xJNeKSyHxDmw9vy',
       first_name: 'Steven',
       last_name: 'Albury',
@@ -20,7 +20,7 @@ exports.seed = async (knex) => {
       warehouse_id: warehouses[0].id,
     },
     {
-      email: 'andrei@chem.com',
+      username: 'andrei',
       password: '$2b$10$.4cXctESTDCJfTvOZcXe/OHM1VpW93b/OgCdB.xJNeKSyHxDmw9vy',
       first_name: 'Stefan-Andrei',
       last_name: 'Atudorei',
@@ -29,7 +29,7 @@ exports.seed = async (knex) => {
       warehouse_id: warehouses[3].id,
     },
     {
-      email: 'cassandra@chem.com',
+      username: 'cassandra',
       password: '$2b$10$.4cXctESTDCJfTvOZcXe/OHM1VpW93b/OgCdB.xJNeKSyHxDmw9vy',
       first_name: 'Cassandra',
       last_name: 'Tiltack',
@@ -38,7 +38,7 @@ exports.seed = async (knex) => {
       warehouse_id: warehouses[2].id,
     },
     {
-      email: 'charlene@chem.com',
+      username: 'charlene',
       password: '$2b$10$.4cXctESTDCJfTvOZcXe/OHM1VpW93b/OgCdB.xJNeKSyHxDmw9vy',
       first_name: 'Charlene',
       last_name: 'Marteyn',
@@ -47,7 +47,7 @@ exports.seed = async (knex) => {
       warehouse_id: warehouses[4].id,
     },
     {
-      email: 'paulina@chem.com',
+      username: 'paulina',
       password: '$2b$10$.4cXctESTDCJfTvOZcXe/OHM1VpW93b/OgCdB.xJNeKSyHxDmw9vy',
       first_name: 'Paulina',
       last_name: 'Kazmierczak',
@@ -56,7 +56,7 @@ exports.seed = async (knex) => {
       warehouse_id: 2,
     },
     {
-      email: 'razvan@chem.com',
+      username: 'razvan',
       password: '$2b$10$.4cXctESTDCJfTvOZcXe/OHM1VpW93b/OgCdB.xJNeKSyHxDmw9vy',
       first_name: 'Razvan',
       last_name: 'bertea',
