@@ -4,7 +4,6 @@ exports.seed = async (knex) => {
     .select()
     .from('warehouses')
     .where({ depot_id: 1 });
-  console.log(warehousesDk);
   // Inserts seed entries
   return knex('delivery_stocks').insert([
     {
