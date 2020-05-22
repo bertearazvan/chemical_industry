@@ -32,7 +32,7 @@ exports.seed = async (knex) => {
     },
     {
       ticket_no: uuidv4(),
-      status_id: 3,
+      status_id: 4,
       case_handler: users[6].id,
       drivers_backlog_id: drivers_backlog[4].id,
       company_id: 2,
