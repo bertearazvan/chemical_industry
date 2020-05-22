@@ -8,36 +8,21 @@ const saltRounds = 10;
 // JWT
 const jwt = require('jsonwebtoken');
 // Middleware
-const { isAuthenticated } = require('../middleware/auth');
-
-// bcrypt.hash("password", saltRounds, (error, hashedPassword) => {
-//     if (error) {
-//         console.log(error);
-//     }
-//     console.log("this is the newly hashed password", hashedPassword);
-// })
-
-// bcrypt.compare("password", "$2b$10$iIWF5cIuNrXrRGw8xqdr7efqYjgpqxc1OJWIM3IhzXSNPhH6.MJ5q", (error, isSame) => {
-//     if (error) {
-//         console.log(error);
-//     }
-//     console.log("it is the same? ", isSame);
-// })
+// const { isAuthenticated } = require('../middleware/auth');
 
 router.post('/users/login', async (req, res) => {
-  console.log(req.body);
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
-  if (email && password) {
+  if (username && password) {
     try {
       const users = await User.query()
         .where({
-          email: email,
+          username,
         })
         .limit(1);
 
       const user = users[0];
-      console.log(user);
+
       if (!user) {
         return res.status(404).send({
           response: 'Wrong username',
@@ -50,19 +35,16 @@ router.post('/users/login', async (req, res) => {
             .status(500)
             .send({ response: 'There was an error when crypting the data' });
         }
-        //   console.log(isSame);
-        user.password = '';
+
         if (!isSame) {
           return res.status(404).send({
             response: 'Wrong password',
           });
         } else {
-          sess = user;
-
           const token = jwt.sign(
             {
               userId: user.id,
-              email: user.email,
+              username: user.username,
             },
             'mysecretkey'
           );
@@ -110,10 +92,10 @@ router.post('/users/login', async (req, res) => {
 });
 
 router.post('/users/register', (req, res) => {
-  const { email, password, firstName, lastName, repeatPassword } = req.body;
+  const { username, password, firstName, lastName, repeatPassword } = req.body;
 
   if (
-    email &&
+    username &&
     password &&
     firstName &&
     lastName &&
@@ -136,7 +118,7 @@ router.post('/users/register', (req, res) => {
           const existingUser = await User.query()
             .select()
             .where({
-              email: email,
+              username: username,
             })
             .limit(1);
 
@@ -147,14 +129,14 @@ router.post('/users/register', (req, res) => {
           } else {
             const newUser = await User.query()
               .insert({
-                email,
+                username,
                 password: hashedPassword,
                 first_name: firstName,
                 last_name: lastName,
               })
               .whereNotExists(() => {
                 User.query().select().whereNot({
-                  email: email,
+                  username: username,
                 });
               });
             return res.status(200).send({
