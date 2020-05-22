@@ -1,7 +1,16 @@
-import React from "react";
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+
+import Button from '../components/Button';
 
 const Home = () => {
-  return <div>Home</div>;
+  const history = useHistory();
+
+  const logoutUser = () => {
+    localStorage.removeItem('token');
+    history.push('/');
+  };
+  return <Button name="Logout" onClick={logoutUser} />;
 };
 
 export default Home;
