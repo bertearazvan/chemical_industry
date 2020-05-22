@@ -423,33 +423,96 @@ router.post(
   }
 );
 
-router.get('/deliveries/checkJob', async (req, res) => {
+router.get('/deliveries/checkJob', isAuthenticated, async (req, res) => {
   // ####
-  // let { deliveryType, ticketNumber } = req.query;
-  // pass job type (delivery/pickup)
+  let { ticketNumber } = req.query;
   // pass ticket id
-  let deliveryType = 1;
-  let ticketNumber = '8151dc8f-25a1-420d-83c9-621dcfd1665e';
-  let objectToReturn;
+  let completeDelivery;
   try {
     const delivery = await Delivery.query()
-      .select()
-      .where({ delivery_type: deliveryType, ticket_no: ticketNumber });
-    if (!delivery[0]) {
-      return res.status(404).send({ response: 'Delivery could not be found' });
-    }
-
-    const deliveryStock = await DeliveryStocks.query()
       .select(
-        'chemicals.name',
-        'chemicals.id',
-        'delivery_stocks.storage_amount as storage'
+        'deliveries.id',
+        'delivery_types.name as deliveryType',
+        'deliveries.ticket_no'
+      )
+      .join('delivery_types', {
+        'deliveries.delivery_type': 'delivery_types.id',
+      })
+      .where({ ticket_no: ticketNumber });
+    if (!delivery[0]) {
+      return res.status(404).send({
+        response: 'Delivery could not be found.',
+      });
+    }
+    completeDelivery = delivery[0];
+
+    const deliveryCompany = await Delivery.query()
+      .select(
+        'external_companies.name as companyName',
+        'external_companies.phone_number as companyPhone',
+        'external_companies.address as companyAddress',
+        'cities.name as companyLocation'
+      )
+      .join('external_companies', {
+        'deliveries.company_id': 'external_companies.id',
+      })
+      .join('cities', { 'external_companies.city_id': 'cities.id' })
+      .where({ ticket_no: ticketNumber });
+    completeDelivery.company = deliveryCompany[0];
+
+    const deliveryDrivers = await Delivery.query()
+      .select(
+        'drivers.first_name as firstName',
+        'drivers.last_name as lastName',
+        'drivers.phone_no as phoneNumber',
+        'external_companies.name as driverCompany'
+      )
+      .join('drivers_backlog', {
+        'deliveries.drivers_backlog_id': 'drivers_backlog.id',
+      })
+      .join('drivers', function () {
+        this.on({ 'drivers_backlog.driver_id_1': 'drivers.id' }).orOn({
+          'drivers_backlog.driver_id_2': 'drivers.id',
+        });
+      })
+      .join('external_companies', {
+        'drivers.company_id': 'external_companies.id',
+      })
+      .where({ ticket_no: ticketNumber });
+
+    completeDelivery.drivers = deliveryDrivers;
+
+    const deliveryTruck = await Delivery.query()
+      .select(
+        'trucks.plate_no as plateNumber',
+        'trucks.total_capacity as truckTotalCapacity',
+        'external_companies.name as truckCompany'
+      )
+      .join('drivers_backlog', {
+        'deliveries.drivers_backlog_id': 'drivers_backlog.id',
+      })
+      .join('trucks', {
+        'drivers_backlog.truck_id': 'trucks.id',
+      })
+      .join('external_companies', {
+        'trucks.company_id': 'external_companies.id',
+      })
+      .where({ ticket_no: ticketNumber });
+    completeDelivery.truck = deliveryTruck[0];
+
+    const deliveryStocks = await DeliveryStocks.query()
+      .select(
+        'chemicals.name as chemical_name',
+        'delivery_stocks.storage_amount as storage',
+        'warehouses.depot_id',
+        'warehouses.position as warehouse_number'
       )
       .join('chemicals', { 'chemicals.id': 'delivery_stocks.chemical_id' })
+      .join('warehouses', { 'warehouses.id': 'delivery_stocks.warehouse_id' })
       .where({ delivery_id: delivery[0].id });
-    if (deliveryStock[0]) {
-      return res.status(200).send({ deliveries: deliveryStock });
-    }
+    completeDelivery.deliveryStock = deliveryStocks;
+
+    return res.status(200).send({ delivery: completeDelivery });
   } catch (error) {
     console.log(error);
     return res.status(500).send({ response: 'Something went wrong' });
