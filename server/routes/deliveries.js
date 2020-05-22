@@ -1,7 +1,9 @@
 const router = require('express').Router();
 // Models
 const User = require('../models/User');
+const Delivery = require('../models/Delivery');
 const WarehouseStock = require('../models/Warehouse_stock');
+const DeliveryStocks = require('../models/Delivery_stocks');
 // Middleware
 const { isAuthenticated } = require('../middleware/auth');
 const { getDataDeliveries } = require('../middleware/getDataDeliveries');
@@ -24,7 +26,7 @@ router.get(
 );
 
 router.post(
-  '/deliveries/checkDelivery',
+  '/deliveries/checkCreatingJob',
   isAuthenticated,
   getDataDeliveries,
   async (req, res) => {
@@ -33,26 +35,38 @@ router.post(
     // let { depotId, chemicals, deliveryType } = req.body;
 
     // companyId = 3
-    let deliveryType = 1;
+    // let deliveryType = 1; // delivery type delivery
+    let deliveryType = 2; // delivery type pickup
     let chemicals = [
       {
-        chemical: 'Chemical C',
-        storage: 5,
-        id: 3,
+        chemical: 'Chemical A',
+        storage: 2,
+        id: 1,
       },
       {
         chemical: 'Chemical B',
-        storage: 2,
+        storage: 4,
         id: 2,
+      },
+      {
+        chemical: 'Chemical C',
+        storage: 4,
+        id: 3,
       },
     ];
     let depotId = 1;
     // drivers = 27;
 
+    if (!depotId || !chemicals || !deliveryType) {
+      res.status(404).send({ response: 'Missing fields' });
+    }
+
     try {
       const user = await User.query().select().where({ id: req.userId });
 
       let possibleStorage = [];
+      let storageToCompare = 0;
+      let chemicalsStorage = 0;
       if (user[0].warehouse_id === null) {
         //select the depot
         let warehouses = req.deliveryObject.depots[depotId];
@@ -60,6 +74,7 @@ router.post(
         if (deliveryType === 1) {
           //map through chemicals from req.body
           chemicals.map((chemical) => {
+            chemicalsStorage += chemical.storage;
             //loop through every warehouse
             for (let i = 1; i <= Object.keys(warehouses).length; i++) {
               // if the storage the chemical has exceeds the storage left in a warehouse we pass
@@ -98,6 +113,7 @@ router.post(
                         addDataToArray();
                         warehouses[i].warehouse_current_storage +=
                           chemical.storage;
+                        storageToCompare += chemical.storage;
                         i = Object.keys(warehouses).length + 1;
                         return true;
                       }
@@ -116,6 +132,7 @@ router.post(
                             addDataToArray();
                             warehouses[i].warehouse_current_storage +=
                               chemical.storage;
+                            storageToCompare += chemical.storage;
                             i = Object.keys(warehouses).length + 1;
                             return true;
                           }
@@ -142,6 +159,7 @@ router.post(
                             addDataToArray();
                             warehouses[i].warehouse_current_storage +=
                               chemical.storage;
+                            storageToCompare += chemical.storage;
                             i = Object.keys(warehouses).length + 1;
                             return true;
                           }
@@ -159,6 +177,7 @@ router.post(
                             addDataToArray();
                             warehouses[i].warehouse_current_storage +=
                               chemical.storage;
+                            storageToCompare += chemical.storage;
                             i = Object.keys(warehouses).length + 1;
                             return true;
                           }
@@ -171,6 +190,7 @@ router.post(
                         addDataToArray();
                         warehouses[i].warehouse_current_storage +=
                           chemical.storage;
+                        storageToCompare += chemical.storage;
                         i = Object.keys(warehouses).length + 1;
                         return true;
                       }
@@ -182,6 +202,7 @@ router.post(
                         addDataToArray();
                         warehouses[i].warehouse_current_storage +=
                           chemical.storage;
+                        storageToCompare += chemical.storage;
                         i = Object.keys(warehouses).length + 1;
                         return true;
                       }
@@ -199,6 +220,7 @@ router.post(
                             addDataToArray();
                             warehouses[i].warehouse_current_storage +=
                               chemical.storage;
+                            storageToCompare += chemical.storage;
                             i = Object.keys(warehouses).length + 1;
                             return true;
                           }
@@ -220,6 +242,7 @@ router.post(
                             addDataToArray();
                             warehouses[i].warehouse_current_storage +=
                               chemical.storage;
+                            storageToCompare += chemical.storage;
                             i = Object.keys(warehouses).length + 1;
                             return true;
                           }
@@ -235,6 +258,7 @@ router.post(
                             addDataToArray();
                             warehouses[i].warehouse_current_storage +=
                               chemical.storage;
+                            storageToCompare += chemical.storage;
                             i = Object.keys(warehouses).length + 1;
                             return true;
                           }
@@ -245,6 +269,7 @@ router.post(
                         addDataToArray();
                         warehouses[i].warehouse_current_storage +=
                           chemical.storage;
+                        storageToCompare += chemical.storage;
                         i = Object.keys(warehouses).length + 1;
                         return true;
                       }
@@ -253,6 +278,7 @@ router.post(
                         addDataToArray();
                         warehouses[i].warehouse_current_storage +=
                           chemical.storage;
+                        storageToCompare += chemical.storage;
                         i = Object.keys(warehouses).length + 1;
                         return true;
                       }
@@ -270,8 +296,10 @@ router.post(
                       );
                       if (!forwardNeighbourChem) {
                         addDataToArray();
+
                         warehouses[i].warehouse_current_storage +=
                           chemical.storage;
+                        storageToCompare += chemical.storage;
                         i = Object.keys(warehouses).length + 1;
                         return true;
                       }
@@ -293,6 +321,7 @@ router.post(
                         addDataToArray();
                         warehouses[i].warehouse_current_storage +=
                           chemical.storage;
+                        storageToCompare += chemical.storage;
                         i = Object.keys(warehouses).length + 1;
                         return true;
                       }
@@ -308,6 +337,7 @@ router.post(
                         addDataToArray();
                         warehouses[i].warehouse_current_storage +=
                           chemical.storage;
+                        storageToCompare += chemical.storage;
                         i = Object.keys(warehouses).length + 1;
                         return true;
                       }
@@ -315,11 +345,13 @@ router.post(
                   } else if (chemical.id === 2) {
                     addDataToArray();
                     warehouses[i].warehouse_current_storage += chemical.storage;
+                    storageToCompare += chemical.storage;
                     i = Object.keys(warehouses).length + 1;
                     return true;
                   } else if (chemical.id === 3) {
                     addDataToArray();
                     warehouses[i].warehouse_current_storage += chemical.storage;
+                    storageToCompare += chemical.storage;
                     i = Object.keys(warehouses).length + 1;
                     return true;
                   }
@@ -327,9 +359,60 @@ router.post(
               } // end if
             } // for loop
           }); //endmap
-          return res.send({ possibleStorage, warehouses });
         } else if (deliveryType === 2) {
           // delivery type pickup
+
+          // map through the chemicals we want.
+          chemicals.map((chemical) => {
+            chemicalsStorage += chemical.storage;
+            // map through the warehouses
+            for (let i = 1; i <= Object.keys(warehouses).length; i++) {
+              // map through the chemicals from the warehouses
+              warehouses[i].chemicals.some((warehouseChemical) => {
+                const addDataToArray = (storage) => {
+                  possibleStorage.push({
+                    warehouseNumber: warehouses[i].warehouse_number,
+                    depotId: warehouses[i].depot_id,
+                    warehouseId: warehouses[i].warehouse_id,
+                    chemicalName: chemical.chemical,
+                    storage: storage,
+                  });
+                };
+
+                // if we find a match
+                if (chemical.id === warehouseChemical.id) {
+                  // we want to compare storages
+                  if (chemical.storage > warehouseChemical.storage) {
+                    addDataToArray(warehouseChemical.storage);
+
+                    warehouses[i].warehouse_current_storage -=
+                      warehouseChemical.storage;
+                    chemical.storage -= warehouseChemical.storage;
+                    storageToCompare += warehouseChemical.storage;
+                    // i = Object.keys(warehouses).length + 1;
+                    // return true;
+                  } else if (chemical.storage <= warehouseChemical.storage) {
+                    addDataToArray(chemical.storage);
+                    warehouses[i].warehouse_current_storage -= chemical.storage;
+                    storageToCompare += chemical.storage;
+                    i = Object.keys(warehouses).length + 1;
+                    return true;
+                  }
+                }
+              });
+            }
+          });
+
+          // check what chemicals we have
+          // if we encounter the same chemical id, we compare the storage and see if it is + / - .
+        }
+        console.log(chemicalsStorage, storageToCompare);
+        if (chemicalsStorage === storageToCompare) {
+          return res.send({ possibleStorage, warehouses });
+        } else {
+          res.status(404).send({
+            response: 'We could not satisfy the request from this depot',
+          });
         }
       } else {
         return res.status(401).send({ response: 'Not authorized' });
@@ -339,5 +422,40 @@ router.post(
     }
   }
 );
+
+router.get('/deliveries/checkJob', async (req, res) => {
+  // ####
+  // let { deliveryType, ticketNumber } = req.query;
+  // pass job type (delivery/pickup)
+  // pass ticket id
+  let deliveryType = 1;
+  let ticketNumber = '8151dc8f-25a1-420d-83c9-621dcfd1665e';
+  let objectToReturn;
+  try {
+    const delivery = await Delivery.query()
+      .select()
+      .where({ delivery_type: deliveryType, ticket_no: ticketNumber });
+    if (!delivery[0]) {
+      return res.status(404).send({ response: 'Delivery could not be found' });
+    }
+
+    const deliveryStock = await DeliveryStocks.query()
+      .select(
+        'chemicals.name',
+        'chemicals.id',
+        'delivery_stocks.storage_amount as storage'
+      )
+      .join('chemicals', { 'chemicals.id': 'delivery_stocks.chemical_id' })
+      .where({ delivery_id: delivery[0].id });
+    if (deliveryStock[0]) {
+      return res.status(200).send({ deliveries: deliveryStock });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ response: 'Something went wrong' });
+  }
+  // check if the ticket id corresponds to the job type
+  // return desired data
+});
 
 module.exports = router;
