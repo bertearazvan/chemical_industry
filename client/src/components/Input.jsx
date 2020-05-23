@@ -12,7 +12,7 @@ const StyledInput = styled.input`
   outline: none;
 
   z-index: 5;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   padding-left: 20px;
 `;
 

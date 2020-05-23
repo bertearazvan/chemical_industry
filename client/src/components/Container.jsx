@@ -16,15 +16,19 @@ const StyledDiv = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   justify-items: center;
+  align-content: center;
 
   border-radius: 50px;
   background-color: white;
+  box-shadow: 0px 3px 5px 2px rgba(0, 0, 0, 0.13);
 
   z-index: 1;
 `;
 
 const StyledDivContent = styled.div`
   width: 315px;
+  height: 100%;
+  margin-top: -100px;
 `;
 
 const Container = (props) => {
