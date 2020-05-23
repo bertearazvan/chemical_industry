@@ -11,12 +11,14 @@ const Warehouse = require('../models/Warehouse');
 const WarehouseStock = require('../models/Warehouse_stock');
 const DeliveryStocks = require('../models/Delivery_stocks');
 const DriversBacklog = require('../models/Drivers_backlog');
+const Audit = require('../models/Audit');
 // Middleware
 const { isAuthenticated } = require('../middleware/auth');
 const { getDataDeliveries } = require('../middleware/getDataDeliveries');
 
+// get data needed for creating a job
 router.get(
-  '/deliveries/getDataForCreateJob',
+  '/deliveries/data',
   isAuthenticated,
   getDataDeliveries,
   async (req, res) => {
@@ -32,9 +34,9 @@ router.get(
   }
 );
 
-// router for checking the storage of the warehouses
+// route for checking the storage of the warehouses in your depot
 router.post(
-  '/deliveries/checkCreatingJob',
+  '/deliveries/checkCreate',
   isAuthenticated,
   getDataDeliveries,
   async (req, res) => {
@@ -450,11 +452,11 @@ router.post(
 );
 
 // route for confirming a job.
-router.post('/deliveries/createJob', isAuthenticated, async (req, res) => {
+router.post('/deliveries', isAuthenticated, async (req, res) => {
   // let { deliveryType, companyId, drivers, truckId, chemicals, ticketNo } = req.body;
 
   let ticketNo = uuidv4();
-  let deliveryType = 1;
+  let deliveryType = 2;
   let companyId = {
     companyId: 2,
     companyName: 'chemicalMine ApS',
@@ -515,6 +517,15 @@ router.post('/deliveries/createJob', isAuthenticated, async (req, res) => {
   try {
     const user = await User.query().select().where({ id: req.userId });
 
+    const warehouseWorkers = await User.query()
+      .select()
+      .whereNot({ warehouse_id: null });
+
+    // console.log(warehouseWorkers);
+
+    const randomWorker =
+      warehouseWorkers[Math.floor(Math.random() * warehouseWorkers.length)];
+
     if (!user[0]) {
       return res.status(401).send({ response: 'User could not be found' });
     }
@@ -522,7 +533,7 @@ router.post('/deliveries/createJob', isAuthenticated, async (req, res) => {
     var warehouseStorageError = new Error(
       'The current request has an error regarding the storage.'
     );
-    warehouseStorageError.statusCode = 401;
+    warehouseStorageError.statusCode = 500;
 
     if (deliveryType === 1) {
       // if delivery type is delivery so we need to deposit
@@ -531,19 +542,39 @@ router.post('/deliveries/createJob', isAuthenticated, async (req, res) => {
         driver_id_2: drivers[1] ? drivers[1].driverId : null,
         truck_id: truckId,
       });
+
+      await Audit.query(trx).insert({
+        old_data: null,
+        new_data: driversBacklog.id,
+        column_name: 'id',
+        table_name: 'drivers_backlog',
+        action: 'INSERT',
+        user_action: user[0].id,
+      });
       // console.log(driversBacklog.id);
 
       const currentDelivery = await Delivery.query(trx).insert({
         ticket_no: ticketNo,
         date_left: moment().format('YYYY-MM-DD HH:mm:ss'),
         status_id: 1,
-        case_handler: user[0].id,
+        case_handler: randomWorker.id,
         drivers_backlog_id: driversBacklog.id,
         company_id: companyId.companyId,
         delivery_type: deliveryType,
+        date_left: moment().add(6, 'days').format('YYYY-MM-DD HH:mm:ss'),
         date_scheduled: moment().add(7, 'days').format('YYYY-MM-DD HH:mm:ss'),
       });
 
+      await Audit.query(trx).insert({
+        old_data: null,
+        new_data: currentDelivery.id,
+        column_name: 'id',
+        table_name: 'deliveries',
+        action: 'INSERT',
+        user_action: user[0].id,
+      });
+
+      // await Delivery.query().$afterInsert();
       // update warehouses stock and the warehouse
       for (let i = 0; i < chemicals.length; i++) {
         let currentWarehouseStock = await WarehouseStock.query(trx)
@@ -563,17 +594,27 @@ router.post('/deliveries/createJob', isAuthenticated, async (req, res) => {
             warehouse_id: chemicals[i].warehouseId,
           });
 
+        await Audit.query(trx).insert({
+          old_data: currentWarehouseStock[0].storage_amount,
+          new_data:
+            currentWarehouseStock[0].storage_amount + chemicals[i].storage,
+          column_name: 'storage_amount',
+          table_name: 'warehouse_stocks',
+          action: 'UPDATE',
+          user_action: user[0].id,
+        });
+
         let currentWarehouse = await Warehouse.query(trx)
           .select()
           .where({ id: chemicals[i].warehouseId });
 
         // check the warehouse storage so we don't exceed
-        // if (
-        //   currentWarehouse[0].current_total_storage + chemicals[i].storage >
-        //   currentWarehouse[0].storage_total_capacity
-        // ) {
-        //   throw warehouseStorageError;
-        // }
+        if (
+          currentWarehouse[0].current_total_storage + chemicals[i].storage >
+          currentWarehouse[0].storage_total_capacity
+        ) {
+          throw warehouseStorageError;
+        }
 
         await Warehouse.query(trx)
           .update({
@@ -582,11 +623,30 @@ router.post('/deliveries/createJob', isAuthenticated, async (req, res) => {
           })
           .where({ id: chemicals[i].warehouseId });
 
-        await DeliveryStocks.query(trx).insert({
+        await Audit.query(trx).insert({
+          old_data: currentWarehouse[0].current_total_storage,
+          new_data:
+            currentWarehouse[0].current_total_storage + chemicals[i].storage,
+          column_name: 'current_total_storage',
+          table_name: 'warehouses',
+          action: 'UPDATE',
+          user_action: user[0].id,
+        });
+
+        let deliveryStocks = await DeliveryStocks.query(trx).insert({
           delivery_id: currentDelivery.id,
           chemical_id: chemicals[i].chemicalId,
           warehouse_id: chemicals[i].warehouseId,
           storage_amount: chemicals[i].storage,
+        });
+
+        await Audit.query(trx).insert({
+          old_data: null,
+          new_data: deliveryStocks.id,
+          column_name: 'id',
+          table_name: 'delivery_stocks',
+          action: 'INSERT',
+          user_action: user[0].id,
         });
       }
     }
@@ -599,17 +659,35 @@ router.post('/deliveries/createJob', isAuthenticated, async (req, res) => {
         driver_id_2: drivers[1] ? drivers[1].driverId : null,
         truck_id: truckId,
       });
+
+      await Audit.query(trx).insert({
+        old_data: null,
+        new_data: driversBacklog.id,
+        column_name: 'id',
+        table_name: 'drivers_backlog',
+        action: 'INSERT',
+        user_action: user[0].id,
+      });
       // console.log(driversBacklog.id);
 
       const currentDelivery = await Delivery.query(trx).insert({
         ticket_no: ticketNo,
-        date_left: moment().format('YYYY-MM-DD HH:mm:ss'),
+        date_left: moment().add(6, 'days').format('YYYY-MM-DD HH:mm:ss'),
         status_id: 1,
         case_handler: user[0].id,
         drivers_backlog_id: driversBacklog.id,
         company_id: companyId.companyId,
         delivery_type: deliveryType,
         date_scheduled: moment().add(7, 'days').format('YYYY-MM-DD HH:mm:ss'),
+      });
+
+      await Audit.query(trx).insert({
+        old_data: null,
+        new_data: currentDelivery.id,
+        column_name: 'id',
+        table_name: 'deliveries',
+        action: 'INSERT',
+        user_action: user[0].id,
       });
 
       // update warehouses stock and the warehouse
@@ -631,6 +709,16 @@ router.post('/deliveries/createJob', isAuthenticated, async (req, res) => {
             warehouse_id: chemicals[i].warehouseId,
           });
 
+        await Audit.query(trx).insert({
+          old_data: currentWarehouseStock[0].storage_amount,
+          new_data:
+            currentWarehouseStock[0].storage_amount - chemicals[i].storage,
+          column_name: 'storage_amount',
+          table_name: 'warehouse_stocks',
+          action: 'UPDATE',
+          user_action: user[0].id,
+        });
+
         let currentWarehouse = await Warehouse.query(trx)
           .select()
           .where({ id: chemicals[i].warehouseId });
@@ -650,11 +738,30 @@ router.post('/deliveries/createJob', isAuthenticated, async (req, res) => {
           })
           .where({ id: chemicals[i].warehouseId });
 
-        await DeliveryStocks.query(trx).insert({
+        await Audit.query(trx).insert({
+          old_data: currentWarehouse[0].current_total_storage,
+          new_data:
+            currentWarehouse[0].current_total_storage - chemicals[i].storage,
+          column_name: 'current_total_storage',
+          table_name: 'warehouses',
+          action: 'UPDATE',
+          user_action: user[0].id,
+        });
+
+        let deliveryStocks = await DeliveryStocks.query(trx).insert({
           delivery_id: currentDelivery.id,
           chemical_id: chemicals[i].chemicalId,
           warehouse_id: chemicals[i].warehouseId,
           storage_amount: chemicals[i].storage,
+        });
+
+        await Audit.query(trx).insert({
+          old_data: null,
+          new_data: deliveryStocks.id,
+          column_name: 'id',
+          table_name: 'delivery_stocks',
+          action: 'INSERT',
+          user_action: user[0].id,
         });
       }
     }
@@ -678,7 +785,6 @@ router.post('/deliveries/createJob', isAuthenticated, async (req, res) => {
         chemicalAStorage += warehouseStocksA[0].storage_amount;
       }
     }
-    console.log(chemicalAStorage);
     if (chemicalAStorage >= 15) {
       let transporter = nodemailer.createTransport(smtpCredentials);
       var mailOptions = {
@@ -704,8 +810,6 @@ router.post('/deliveries/createJob', isAuthenticated, async (req, res) => {
           message: 'Email is sent!',
         });
       });
-      // call fire brigade
-      // send email
     }
 
     // Here the transaction has been committed.
@@ -723,7 +827,7 @@ router.post('/deliveries/createJob', isAuthenticated, async (req, res) => {
 });
 
 // get data based on the ticket number
-router.get('/deliveries/checkJob', isAuthenticated, async (req, res) => {
+router.get('/deliveries/ticket', isAuthenticated, async (req, res) => {
   // ####
   let { ticketNumber } = req.query;
 
@@ -832,57 +936,132 @@ router.get('/deliveries/checkJob', isAuthenticated, async (req, res) => {
 });
 
 // confirm depot worker
-router.post('/deliveries/confirmDepot', isAuthenticated, async (req, res) => {
+router.post('/deliveries/depot/confirm', isAuthenticated, async (req, res) => {
   const { ticketNumber } = req.body;
+  const trx = await Delivery.startTransaction();
 
   try {
-    const updateDelivery = await Delivery.query()
+    const user = await User.query().select().where({ id: req.userId });
+
+    const currentDelivery = await Delivery.query(trx)
+      .select()
+      .where({ ticket_no: ticketNumber });
+
+    if (!currentDelivery[0]) {
+      await trx.rollback();
+      return res.status(404).send({ response: 'Ticket does not exist' });
+    }
+
+    const updateDelivery = await Delivery.query(trx)
       .update({
         date_arrival: moment().format('YYYY-MM-DD HH:mm:ss'),
         status_id: 3,
       })
       .where({ ticket_no: ticketNumber });
 
+    await Audit.query(trx).insert({
+      old_data: null,
+      new_data: moment().format('YYYY-MM-DD HH:mm:ss'),
+      column_name: 'date_arrival',
+      table_name: 'deliveries',
+      action: 'UPDATE',
+      user_action: user[0].id,
+    });
+
+    await Audit.query(trx).insert({
+      old_data: currentDelivery.status_id,
+      new_data: 3,
+      column_name: 'status_id',
+      table_name: 'deliveries',
+      action: 'UPDATE',
+      user_action: user[0].id,
+    });
+
     if (!updateDelivery) {
+      await trx.rollback();
       return res.status(404).send({ response: 'No delivery got updated' });
     }
+
+    await trx.commit();
     return res.status(200).send({ response: 'Delivery updated' });
   } catch (err) {
     console.log(err);
+    await trx.rollback();
     return res.status(500).send({ response: 'Something went wrong' });
   }
 });
 
 // confirm warehouse worker
 router.post(
-  '/deliveries/confirmWarehouse',
+  '/deliveries/warehouse/confirm',
   isAuthenticated,
   async (req, res) => {
     // get ticketNumber and confirm it
     const { ticketNumber } = req.body;
-
+    const trx = await Delivery.startTransaction();
     try {
-      const updateDelivery = await Delivery.query()
+      const user = await User.query(trx).select().where({ id: req.userId });
+
+      const currentDelivery = await Delivery.query(trx)
+        .select()
+        .where({ ticket_no: ticketNumber });
+
+      if (currentDelivery[0].case_handler !== user[0].id) {
+        trx.rollback();
+        return res.status(401).send({
+          response: 'The delivery needs to be confirmed by the case handler.',
+        });
+      }
+
+      if (!currentDelivery[0]) {
+        trx.rollback();
+        return res.status(404).send({ response: 'Delivery not found' });
+      }
+
+      const updateDelivery = await Delivery.query(trx)
         .update({
           date_confirmed: moment().format('YYYY-MM-DD HH:mm:ss'),
           status_id: 4,
         })
         .where({ ticket_no: ticketNumber });
 
+      await Audit.query(trx).insert({
+        old_data: currentDelivery[0].date_confirmed,
+        new_data: moment().format('YYYY-MM-DD HH:mm:ss'),
+        column_name: 'date_confirmed',
+        table_name: 'deliveries',
+        action: 'UPDATE',
+        user_action: user[0].id,
+      });
+
+      await Audit.query(trx).insert({
+        old_data: currentDelivery[0].status_id,
+        new_data: 4,
+        column_name: 'status_id',
+        table_name: 'deliveries',
+        action: 'UPDATE',
+        user_action: user[0].id,
+      });
+
       if (!updateDelivery) {
+        trx.rollback();
         return res.status(404).send({ response: 'No delivery got confirmed' });
       }
+
+      trx.commit();
       return res.status(200).send({ response: 'Delivery updated' });
     } catch (err) {
       console.log(err);
+      trx.rollback();
       return res.status(500).send({ response: 'Something went wrong' });
     }
     // return all the data for that
   }
 );
 
+// get all the deliveries
 router.get('/deliveries', isAuthenticated, async (req, res) => {
-  // get all deliveries and structured well
+  // get all deliveries structured
   try {
     const deliveries = await Delivery.query().select();
 
@@ -994,9 +1173,37 @@ router.get('/deliveries', isAuthenticated, async (req, res) => {
   }
 });
 
-router.get('/upcomingTrucks', (req, res) => {
+// get all upcoming trucks for today
+router.get('/upcomingTrucks', async (req, res) => {
   // get all the upcoming trucks
   // same for depot and warehouse
+
+  try {
+    const deliveries = await Delivery.query()
+      .select(
+        'deliveries.ticket_no as ticketNumber',
+        'deliveries.date_scheduled as dateScheduled',
+        'delivery_types.name as deliveryType',
+        'external_companies.name as company'
+      )
+      .join('external_companies', {
+        'external_companies.id': 'deliveries.company_id',
+      })
+      .join('delivery_types', {
+        'delivery_types.id': 'deliveries.delivery_type',
+      })
+      .where('date_scheduled', '>=', moment().format('YYYY-MM-DD HH:mm:ss'))
+      .where(
+        'date_scheduled',
+        '<',
+        moment().add(6, 'days').format('YYYY-MM-DD HH:mm:ss')
+      );
+
+    return res.status(200).send({ response: deliveries });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({ response: 'Something went wrong' });
+  }
 });
 
 module.exports = router;
