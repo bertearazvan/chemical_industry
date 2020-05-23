@@ -8,7 +8,7 @@ const StyledHeader = styled.h3`
   text-align: center;
   color: black;
 
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `;
 
 const PageHeader = (props) => {
