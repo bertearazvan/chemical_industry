@@ -1,4 +1,5 @@
 const { Model } = require('objection');
+const Audit = require('./Audit');
 
 class Delivery extends Model {
   static get tableName() {
