@@ -6,6 +6,7 @@ import PageTitle from '../components/PageTitle';
 import Input from '../components/Input';
 import Container from '../components/Container';
 import BottomButton from '../components/BottomButton';
+import GoBack from '../components/GoBack';
 
 const Ticket = () => {
   const [ticketNumber, setTicketNumber] = useState('');
@@ -24,6 +25,7 @@ const Ticket = () => {
 
   return (
     <Container>
+      <GoBack />
       <PageTitle name="Ticket number" />
       <PageHeader name="Insert Ticket Number" />
       <Input
