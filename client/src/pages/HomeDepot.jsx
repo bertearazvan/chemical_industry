@@ -7,6 +7,9 @@ import { setAuthToken } from '../networking/HTTPservice';
 
 import Container from '../components/Container';
 import BottomButton from '../components/BottomButton';
+import Button from '../components/Button';
+import PageHeader from '../components/PageHeader';
+import PageTitle from '../components/PageTitle';
 
 const HomeDepot = () => {
   const history = useHistory();
@@ -49,13 +52,23 @@ const HomeDepot = () => {
     }
   };
 
+  const checkTicket = () => {
+    history.push('/ticket-number');
+  };
+
   const logoutUser = () => {
     localStorage.removeItem('token');
     history.push('/');
   };
   return (
     <Container>
-      depot
+      <PageTitle name="Welcome depot worker" />
+      <PageHeader name="Choose action" />
+      <Button name="Upcoming Trucks" />
+      <Button name="Check Ticket" onClick={checkTicket} />
+      <Button name="Create Job" />
+      <Button name="Warehouses Overview" />
+      <Button name="All Deliveries" />
       <BottomButton name="Logout" onClick={logoutUser} />
     </Container>
   );

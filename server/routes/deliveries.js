@@ -827,113 +827,117 @@ router.post('/deliveries', isAuthenticated, async (req, res) => {
 });
 
 // get data based on the ticket number
-router.get('/deliveries/ticket', isAuthenticated, async (req, res) => {
-  // ####
-  let { ticketNumber } = req.query;
+router.get(
+  '/deliveries/ticket/:ticketNumber',
+  isAuthenticated,
+  async (req, res) => {
+    // ####
+    let ticketNumber = req.params.ticketNumber;
 
-  if (!ticketNumber) {
-    return res.status(500).send({ response: 'Missing fields' });
-  }
-  // pass ticket id
-  let completeDelivery;
-  try {
-    const delivery = await Delivery.query()
-      .select(
-        'delivery_types.id as deliveryTypeId',
-        'deliveries.id',
-        'delivery_types.name as deliveryType',
-        'deliveries.ticket_no'
-      )
-      .join('delivery_types', {
-        'deliveries.delivery_type': 'delivery_types.id',
-      })
-      .where({ ticket_no: ticketNumber });
-    if (!delivery[0]) {
-      return res.status(404).send({
-        response: 'Delivery could not be found.',
-      });
+    if (!ticketNumber) {
+      return res.status(500).send({ response: 'Missing fields' });
     }
-    completeDelivery = delivery[0];
-    completeDelivery.time = moment().format('YYYY-MM-DD HH:mm:ss');
-
-    const deliveryCompany = await Delivery.query()
-      .select(
-        'external_companies.id as companyId',
-        'external_companies.name as companyName',
-        'external_companies.phone_number as companyPhone',
-        'external_companies.address as companyAddress',
-        'cities.name as companyLocation'
-      )
-      .join('external_companies', {
-        'deliveries.company_id': 'external_companies.id',
-      })
-      .join('cities', { 'external_companies.city_id': 'cities.id' })
-      .where({ ticket_no: ticketNumber });
-    completeDelivery.company = deliveryCompany[0];
-
-    const deliveryDrivers = await Delivery.query()
-      .select(
-        'drivers.id as driverId',
-        'drivers.first_name as firstName',
-        'drivers.last_name as lastName',
-        'drivers.phone_no as phoneNumber',
-        'external_companies.name as driverCompany'
-      )
-      .join('drivers_backlog', {
-        'deliveries.drivers_backlog_id': 'drivers_backlog.id',
-      })
-      .join('drivers', function () {
-        this.on({ 'drivers_backlog.driver_id_1': 'drivers.id' }).orOn({
-          'drivers_backlog.driver_id_2': 'drivers.id',
+    // pass ticket id
+    let completeDelivery;
+    try {
+      const delivery = await Delivery.query()
+        .select(
+          'delivery_types.id as deliveryTypeId',
+          'deliveries.id',
+          'delivery_types.name as deliveryType',
+          'deliveries.ticket_no'
+        )
+        .join('delivery_types', {
+          'deliveries.delivery_type': 'delivery_types.id',
+        })
+        .where({ ticket_no: ticketNumber });
+      if (!delivery[0]) {
+        return res.status(404).send({
+          response: 'Delivery could not be found.',
         });
-      })
-      .join('external_companies', {
-        'drivers.company_id': 'external_companies.id',
-      })
-      .where({ ticket_no: ticketNumber });
+      }
+      completeDelivery = delivery[0];
+      completeDelivery.time = moment().format('YYYY-MM-DD HH:mm:ss');
 
-    completeDelivery.drivers = deliveryDrivers;
+      const deliveryCompany = await Delivery.query()
+        .select(
+          'external_companies.id as companyId',
+          'external_companies.name as companyName',
+          'external_companies.phone_number as companyPhone',
+          'external_companies.address as companyAddress',
+          'cities.name as companyLocation'
+        )
+        .join('external_companies', {
+          'deliveries.company_id': 'external_companies.id',
+        })
+        .join('cities', { 'external_companies.city_id': 'cities.id' })
+        .where({ ticket_no: ticketNumber });
+      completeDelivery.company = deliveryCompany[0];
 
-    const deliveryTruck = await Delivery.query()
-      .select(
-        'trucks.id as truckId',
-        'trucks.plate_no as plateNumber',
-        'trucks.total_capacity as truckTotalCapacity',
-        'external_companies.name as truckCompany'
-      )
-      .join('drivers_backlog', {
-        'deliveries.drivers_backlog_id': 'drivers_backlog.id',
-      })
-      .join('trucks', {
-        'drivers_backlog.truck_id': 'trucks.id',
-      })
-      .join('external_companies', {
-        'trucks.company_id': 'external_companies.id',
-      })
-      .where({ ticket_no: ticketNumber });
-    completeDelivery.truck = deliveryTruck[0];
+      const deliveryDrivers = await Delivery.query()
+        .select(
+          'drivers.id as driverId',
+          'drivers.first_name as firstName',
+          'drivers.last_name as lastName',
+          'drivers.phone_no as phoneNumber',
+          'external_companies.name as driverCompany'
+        )
+        .join('drivers_backlog', {
+          'deliveries.drivers_backlog_id': 'drivers_backlog.id',
+        })
+        .join('drivers', function () {
+          this.on({ 'drivers_backlog.driver_id_1': 'drivers.id' }).orOn({
+            'drivers_backlog.driver_id_2': 'drivers.id',
+          });
+        })
+        .join('external_companies', {
+          'drivers.company_id': 'external_companies.id',
+        })
+        .where({ ticket_no: ticketNumber });
 
-    const deliveryStocks = await DeliveryStocks.query()
-      .select(
-        'chemicals.id as chemicalId',
-        'chemicals.name as chemicalName',
-        'delivery_stocks.storage_amount as storage',
-        'warehouses.depot_id',
-        'warehouses.position as warehouseNumber'
-      )
-      .join('chemicals', { 'chemicals.id': 'delivery_stocks.chemical_id' })
-      .join('warehouses', { 'warehouses.id': 'delivery_stocks.warehouse_id' })
-      .where({ delivery_id: delivery[0].id });
-    completeDelivery.deliveryStock = deliveryStocks;
+      completeDelivery.drivers = deliveryDrivers;
 
-    return res.status(200).send({ delivery: completeDelivery });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).send({ response: 'Something went wrong' });
+      const deliveryTruck = await Delivery.query()
+        .select(
+          'trucks.id as truckId',
+          'trucks.plate_no as plateNumber',
+          'trucks.total_capacity as truckTotalCapacity',
+          'external_companies.name as truckCompany'
+        )
+        .join('drivers_backlog', {
+          'deliveries.drivers_backlog_id': 'drivers_backlog.id',
+        })
+        .join('trucks', {
+          'drivers_backlog.truck_id': 'trucks.id',
+        })
+        .join('external_companies', {
+          'trucks.company_id': 'external_companies.id',
+        })
+        .where({ ticket_no: ticketNumber });
+      completeDelivery.truck = deliveryTruck[0];
+
+      const deliveryStocks = await DeliveryStocks.query()
+        .select(
+          'chemicals.id as chemicalId',
+          'chemicals.name as chemicalName',
+          'delivery_stocks.storage_amount as storage',
+          'warehouses.depot_id',
+          'warehouses.position as warehouseNumber'
+        )
+        .join('chemicals', { 'chemicals.id': 'delivery_stocks.chemical_id' })
+        .join('warehouses', { 'warehouses.id': 'delivery_stocks.warehouse_id' })
+        .where({ delivery_id: delivery[0].id });
+      completeDelivery.deliveryStock = deliveryStocks;
+
+      return res.status(200).send({ delivery: completeDelivery });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).send({ response: 'Something went wrong' });
+    }
+    // check if the ticket id corresponds to the job type
+    // return desired data
   }
-  // check if the ticket id corresponds to the job type
-  // return desired data
-});
+);
 
 // confirm depot worker
 router.post('/deliveries/depot/confirm', isAuthenticated, async (req, res) => {

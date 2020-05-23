@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 const StyledHeader = styled.h3`
-  font-family: Verdana;
   font-size: 23px;
   font-weight: 600;
   text-align: center;
@@ -12,6 +11,6 @@ const StyledHeader = styled.h3`
 `;
 
 const PageHeader = (props) => {
-  return <StyledHeader>{props.header}</StyledHeader>;
+  return <StyledHeader>{props.name}</StyledHeader>;
 };
 export default PageHeader;

@@ -1,21 +1,14 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components';
 
 import { setAuthToken } from '../networking/HTTPservice';
 import { login } from '../networking/users';
 
 import PageHeader from '../components/PageHeader';
+import PageTitle from '../components/PageTitle';
 import Input from '../components/Input';
 import Container from '../components/Container';
 import BottomButton from '../components/BottomButton';
-
-const StyledForm = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  position: relative;
-  top: 200px;
-`;
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -30,7 +23,7 @@ const Login = () => {
 
       if (data.response.warehouse_id === null) {
         history.push('/home-depot');
-      } else {
+      } else if (data.response.warehouse_id !== null) {
         history.push('/home-warehouse');
       }
     } catch (err) {
@@ -43,19 +36,18 @@ const Login = () => {
 
   return (
     <Container>
-      <StyledForm>
-        <PageHeader header="Login" />
-        <Input
-          type="text"
-          placeholder="username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <Input
-          type="password"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </StyledForm>
+      <PageTitle name="Chemanager" />
+      <PageHeader name="Login" />
+      <Input
+        type="text"
+        placeholder="username"
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <Input
+        type="password"
+        placeholder="Password"
+        onChange={(e) => setPassword(e.target.value)}
+      />
       <BottomButton onClick={loginUser} name="Login" />
     </Container>
   );
