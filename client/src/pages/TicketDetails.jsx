@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 
+import styled from 'styled-components';
+
 import { ticket } from '../networking/deliveries';
 
 import PageTitle from '../components/PageTitle';
@@ -10,63 +12,75 @@ import ChemicalsDeliveryTable from '../components/ChemicalsDeliveryTable';
 import TableRow from '../components/TableRow';
 import Button from '../components/Button';
 
+const ButtonContainer = styled.div`
+  width: 100%;
+  height: auto;
+  position: absolute;
+  bottom: 80px;
+  left: 0px;
+`;
+
+const ButtonWrapper = styled.div`
+  width: 315px;
+  margin: auto;
+`;
+
 const TicketDetails = () => {
-  const [deliveries, setDeliveries] = useState('');
+  const [deliveryStock, setDeliveryStock] = useState([]);
+  const [ticketno, setTicketno] = useState('');
+  const [deliveryType, setDeliveryType] = useState('');
+  const [drivers, setDrivers] = useState([]);
+  const [plateNumber, setPlateNumber] = useState('');
   const { ticketNumber } = useParams();
   const history = useHistory();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      history.push('/');
-    }
-
     getData();
   }, []);
 
   const getData = async () => {
     try {
       const { data } = await ticket(ticketNumber);
-      setDeliveries(data);
+      setDeliveryStock(data.delivery.deliveryStock);
+      setTicketno(data.delivery.ticket_no);
+      setDeliveryType(data.delivery.deliveryType);
+      setDrivers(data.delivery.drivers);
+      setPlateNumber(data.delivery.truck.plateNumber);
     } catch (err) {
       localStorage.clear();
       history.push('/');
     }
   };
-  console.log(deliveries);
 
   return (
     <Container>
       <PageTitle name="Delivery Details" />
-      {Object.keys(deliveries).map((delivery, i) => (
-        <DeliveryTable
-          key={i}
-          ticket={deliveries[delivery].ticket_no}
-          arrival="Not announced"
-          type={deliveries[delivery].deliveryType}
-          drivers={deliveries[delivery].drivers[i].firstName}
-          truck={deliveries[delivery].truck.plateNumber}
-        />
-      ))}
+      <DeliveryTable
+        ticket={ticketno}
+        arrival="Not announced"
+        type={deliveryType}
+        drivers={drivers.map((driver, i) => (
+          <p key={i}>{driver.firstName}</p>
+        ))}
+        truck={plateNumber}
+      />
       <ChemicalsDeliveryTable />
-      {Object.keys(deliveries).map((delivery, i) => (
+
+      {deliveryStock.map((delivery, i) => (
         <TableRow
           key={i}
-          chemical={deliveries[delivery].deliveryStock[i].chemicalName}
-          quantity={deliveries[delivery].deliveryStock[i].storage}
-          warehouse={deliveries[delivery].deliveryStock[i].warehouseNumber}
+          chemical={delivery.chemicalName}
+          quantity={delivery.storage}
+          warehouse={delivery.warehouseNumber}
           isle="5"
         />
       ))}
-      {/* {Object.keys(deliveries).map((delivery, i) => (
-        <TableRow
-          key={i++}
-          chemical={deliveries[delivery].deliveryStock[i++].chemicalName}
-          quantity={deliveries[delivery].deliveryStock[i++].storage}
-          warehouse={deliveries[delivery].deliveryStock[i++].warehouseNumber}
-          isle="6"
-        />
-      ))} */}
+      <ButtonContainer>
+        <ButtonWrapper>
+          <Button name="Send" onClick={() => console.log('clicked')} />
+          <Button name="Reject" onClick={() => console.log('clicked')} />
+        </ButtonWrapper>
+      </ButtonContainer>
     </Container>
   );
 };

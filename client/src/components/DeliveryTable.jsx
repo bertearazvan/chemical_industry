@@ -2,10 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  position: absolute;
-  top: 40px;
   width: 100%;
   height: auto;
+  margin-top: -150px;
 `;
 const RowName = styled.div`
   font-size: 15px;
