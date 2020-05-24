@@ -11,6 +11,7 @@ import DeliveryTable from '../components/DeliveryTable';
 import ChemicalsDeliveryTable from '../components/ChemicalsDeliveryTable';
 import TableRow from '../components/TableRow';
 import Button from '../components/Button';
+import GoBack from '../components/GoBack';
 
 const ButtonContainer = styled.div`
   width: 100%;
@@ -54,6 +55,7 @@ const TicketDetails = () => {
 
   return (
     <Container>
+      <GoBack />
       <PageTitle name="Delivery Details" />
       <DeliveryTable
         ticket={ticketno}
