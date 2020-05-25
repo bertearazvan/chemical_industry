@@ -456,7 +456,7 @@ router.post('/deliveries', isAuthenticated, async (req, res) => {
   // let { deliveryType, companyId, drivers, truckId, chemicals, ticketNo } = req.body;
 
   let ticketNo = uuidv4();
-  let deliveryType = 2;
+  let deliveryType = 1;
   let companyId = {
     companyId: 2,
     companyName: 'chemicalMine ApS',
@@ -464,22 +464,25 @@ router.post('/deliveries', isAuthenticated, async (req, res) => {
     companyAddress: 'the danish mine address',
     companyLocation: 'Aalborg',
   };
-  let drivers = [
-    {
-      driverId: 1,
-      firstName: 'Steven',
-      lastName: 'Albury',
-      phoneNumber: '+4501010101',
-      driverCompany: 'cheManager.com',
-    },
-    {
-      driverId: 2,
-      firstName: 'Andrei',
-      lastName: 'Stefan',
-      phoneNumber: '+4501010101',
-      driverCompany: 'cheManager.com',
-    },
-  ];
+
+  let drivers = [1, 2];
+
+  // let drivers = [
+  //   {
+  //     driverId: 1,
+  //     firstName: 'Steven',
+  //     lastName: 'Albury',
+  //     phoneNumber: '+4501010101',
+  //     driverCompany: 'cheManager.com',
+  //   },
+  //   {
+  //     driverId: 2,
+  //     firstName: 'Andrei',
+  //     lastName: 'Stefan',
+  //     phoneNumber: '+4501010101',
+  //     driverCompany: 'cheManager.com',
+  //   },
+  // ];
   let truckId = 1;
   let chemicals = [
     {
@@ -538,8 +541,8 @@ router.post('/deliveries', isAuthenticated, async (req, res) => {
     if (deliveryType === 1) {
       // if delivery type is delivery so we need to deposit
       let driversBacklog = await DriversBacklog.query(trx).insert({
-        driver_id_1: drivers[0].driverId,
-        driver_id_2: drivers[1] ? drivers[1].driverId : null,
+        driver_id_1: drivers[0],
+        driver_id_2: drivers[1] ? drivers[1] : null,
         truck_id: truckId,
       });
 
@@ -655,8 +658,8 @@ router.post('/deliveries', isAuthenticated, async (req, res) => {
       // if delivery type is pickup so we need to take
 
       let driversBacklog = await DriversBacklog.query(trx).insert({
-        driver_id_1: drivers[0].driverId,
-        driver_id_2: drivers[1] ? drivers[1].driverId : null,
+        driver_id_1: drivers[0],
+        driver_id_2: drivers[1] ? drivers[1] : null,
         truck_id: truckId,
       });
 
@@ -818,10 +821,16 @@ router.post('/deliveries', isAuthenticated, async (req, res) => {
 
     await trx.rollback();
     console.log(err);
-    return res.status(500).send({ response: 'Something went wrong' });
+    return res.status(500).send({
+      response:
+        err.message ===
+        'The current request has an error regarding the storage.'
+          ? err.message
+          : 'Something went wrong',
+    });
   }
 
-  return res.status(200).send({ response: 'Delivery processed successfully' });
+  return res.status(200).send({ response: 'Delivery is created.' });
 
   // array of chemicals
 });
