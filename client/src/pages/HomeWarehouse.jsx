@@ -27,8 +27,8 @@ const HomeWarehouse = () => {
       console.log('====================================');
     } catch (err) {
       if (err) {
-        localStorage.clear();
-        history.push('/');
+        // localStorage.clear();
+        // history.push('/');
       }
     }
   };

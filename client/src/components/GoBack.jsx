@@ -12,7 +12,7 @@ const Arrow = styled.i`
   border: solid white;
   border-width: 0 3px 3px 0;
   display: inline-block;
-  padding: 3px;
+  padding: 4px;
   transform: rotate(135deg);
 `;
 

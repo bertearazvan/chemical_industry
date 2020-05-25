@@ -14,9 +14,9 @@ const Ticket = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (!token) {
-      history.push('/');
-    }
+    // if (!token) {
+    //   history.push('/');
+    // }
   });
 
   const checkTicket = async () => {

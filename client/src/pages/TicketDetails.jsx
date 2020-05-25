@@ -32,6 +32,7 @@ const TicketDetails = () => {
   const [deliveryType, setDeliveryType] = useState('');
   const [drivers, setDrivers] = useState([]);
   const [plateNumber, setPlateNumber] = useState('');
+  const [arrival, setArrival] = useState('');
   const { ticketNumber } = useParams();
   const history = useHistory();
 
@@ -42,14 +43,16 @@ const TicketDetails = () => {
   const getData = async () => {
     try {
       const { data } = await ticket(ticketNumber);
+      console.log(data);
       setDeliveryStock(data.delivery.deliveryStock);
       setTicketno(data.delivery.ticket_no);
       setDeliveryType(data.delivery.deliveryType);
       setDrivers(data.delivery.drivers);
       setPlateNumber(data.delivery.truck.plateNumber);
+      setArrival(data.delivery.time);
     } catch (err) {
-      localStorage.clear();
-      history.push('/');
+      // localStorage.clear();
+      // history.push('/');
     }
   };
 
@@ -59,7 +62,7 @@ const TicketDetails = () => {
       <PageTitle name="Delivery Details" />
       <DeliveryTable
         ticket={ticketno}
-        arrival="Not announced"
+        arrival={arrival}
         type={deliveryType}
         drivers={drivers.map((driver, i) => (
           <p key={i}>{driver.firstName}</p>

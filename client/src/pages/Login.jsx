@@ -13,6 +13,7 @@ import BottomButton from '../components/BottomButton';
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
   const history = useHistory();
 
   const loginUser = async () => {
@@ -22,9 +23,9 @@ const Login = () => {
       localStorage.setItem('token', data.token);
 
       if (data.response.warehouse_id === null) {
-        history.push('/home-depot');
+        history.push('/home-depot', { data: data.response.username });
       } else if (data.response.warehouse_id !== null) {
-        history.push('/home-warehouse');
+        history.push('/home-warehouse', { data: data.response.username });
       }
     } catch (err) {
       if (err) {
@@ -36,7 +37,7 @@ const Login = () => {
 
   return (
     <Container>
-      <PageTitle name="Chemanager" />
+      <PageTitle name="CheManager" />
       <PageHeader name="Login" />
       <Input
         type="text"

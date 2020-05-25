@@ -27,7 +27,7 @@ router.get(
 
     const user = await User.query().select().where({ id: req.userId });
     if (user[0].warehouse_id === null) {
-      return res.send({ reponse: req.deliveryObject });
+      return res.send({ response: req.deliveryObject });
     } else {
       return res.status(401).send({ response: 'Not authorized' });
     }
@@ -40,24 +40,24 @@ router.post(
   isAuthenticated,
   getDataDeliveries,
   async (req, res) => {
-    // let { chemicals, deliveryType } = req.body;
+    let { chemicals, deliveryType } = req.body;
 
-    let deliveryType = 1; // delivery type pickup
-    let chemicals = [
-      {
-        chemical: 'Chemical A',
-        storage: 6,
-        id: 1,
-      },
-      {
-        chemical: 'Chemical C',
-        storage: 1,
-        id: 3,
-      },
-    ];
+    // let deliveryType = 1; // delivery type pickup
+    // let chemicals = [
+    //   {
+    //     chemical: 'Chemical A',
+    //     storage: 6,
+    //     id: 1,
+    //   },
+    //   {
+    //     chemical: 'Chemical C',
+    //     storage: 1,
+    //     id: 3,
+    //   },
+    // ];
 
     if (!chemicals || !deliveryType) {
-      res.status(404).send({ response: 'Missing fields' });
+      return res.status(404).send({ response: 'Missing fields' });
     }
 
     try {
@@ -434,10 +434,13 @@ router.post(
 
         if (chemicalsStorage === storageToCompare) {
           objectToReturn.ticketNumber = uuidv4();
+          objectToReturn.arrival = moment()
+            .add(7, 'days')
+            .format('YYYY-MM-DD HH:mm:ss');
           objectToReturn.possibleStorage = possibleStorage;
-          return res.send({ response: objectToReturn });
+          return res.status(200).send({ response: objectToReturn });
         } else {
-          res.status(404).send({
+          return res.status(404).send({
             response: 'We could not satisfy the request from this depot',
           });
         }

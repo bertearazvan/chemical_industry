@@ -11,7 +11,7 @@ const Wrapper = styled.div`
 const StyledPageTitle = styled.h4`
   position: relative;
   text-align: center;
-  font-size: 16px;
+  font-size: 20px;
   color: white;
 `;
 
