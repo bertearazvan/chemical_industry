@@ -15,22 +15,57 @@ const FinalizeCreateJob = () => {
   const location = useLocation();
   const deliveryType = location.state.deliveryType;
   const companyID = location.state.companyID;
-  const driverID = location.state.driverID;
-  const truckID = location.state.truckID;
-  const chemicals = location.state.chemicals;
-  const response = location.state.response;
-  useEffect(() => {
-    console.log(location.state.driverID);
-  }, []);
+  const driver = location.state.driver;
+  const truck = location.state.truck;
+  const data = location.state.data.response;
+
+  const filteredData = data.possibleStorage.filter((data) => {
+    return data.storage;
+  });
+
+  let arrayDriver = [];
+  arrayDriver.push(driver.id);
+
+  const sendData = async () => {
+    try {
+      await deliveries({
+        deliveryType,
+        companyId: companyID,
+        drivers: arrayDriver,
+        truckId: truck.id,
+        chemicals: filteredData,
+        ticketNo: data.ticketNumber,
+      });
+      history.push('/home-depot');
+    } catch (err) {
+      if (err) {
+        console.log(err.message);
+      }
+    }
+  };
 
   return (
     <Container>
       <GoBack />
       <PageTitle name="Create Job Information" />
+      <DeliveryTable
+        ticket={data.ticketNumber}
+        arrival={data.arrival}
+        type={deliveryType === 1 ? 'Delivery' : 'Pick-up'}
+        drivers={driver.username}
+        truck={truck.plate_no}
+      />
       <ChemicalsDeliveryTable />
-      <DeliveryTable />
-      <TableRow />
-      <BottomButton name="Send" />
+      {filteredData.map((oneStorage, i) => (
+        <TableRow
+          key={i}
+          chemical={oneStorage.chemicalName}
+          quantity={oneStorage.storage}
+          warehouse={oneStorage.warehouseId}
+          isle="3"
+        />
+      ))}
+      <BottomButton name="Send" onClick={sendData} />
     </Container>
   );
 };

@@ -15,8 +15,8 @@ const SelectChemicals = () => {
   const deliveryType = location.state.deliveryType;
   const delivery = location.state.delivery;
   const companyID = location.state.companyID;
-  const driverID = location.state.driverID;
-  const truckID = location.state.truckID;
+  const driver = location.state.driver;
+  const truck = location.state.truck;
 
   const [chemicalAAmount, setChemicalAAmount] = useState();
   const [chemicalBAmount, setChemicalBAmount] = useState();
@@ -52,9 +52,8 @@ const SelectChemicals = () => {
       history.push('/finalize-job', {
         deliveryType,
         companyID,
-        driverID,
-        truckID,
-        chemicals,
+        driver,
+        truck,
         delivery,
         data,
       });

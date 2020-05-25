@@ -14,3 +14,7 @@ export const ticket = async (ticketNumber) => {
 export const checkCreate = async (data) => {
   return axios.post(`${localhost}${url}/checkCreate`, data);
 };
+
+export const deliveries = async (data) => {
+  return axios.post(`${localhost}${url}`, data);
+};

@@ -14,12 +14,12 @@ const SelectDriver = () => {
   const delivery = location.state.delivery;
   const companyID = location.state.companyID;
 
-  const selectDriver = (driverID) => {
+  const selectDriver = (driver) => {
     history.push('/select-truck', {
       delivery,
       deliveryType,
       companyID,
-      driverID,
+      driver,
     });
   };
 
@@ -32,7 +32,7 @@ const SelectDriver = () => {
         <Button
           key={i}
           name={`Driver: ${driver.username}`}
-          onClick={() => selectDriver(driver.id)}
+          onClick={() => selectDriver(driver)}
         />
       ))}
     </Container>

@@ -456,19 +456,36 @@ router.post(
 
 // route for confirming a job.
 router.post('/deliveries', isAuthenticated, async (req, res) => {
-  // let { deliveryType, companyId, drivers, truckId, chemicals, ticketNo } = req.body;
+  let {
+    deliveryType,
+    companyId,
+    drivers,
+    truckId,
+    chemicals,
+    ticketNo,
+  } = req.body;
 
-  let ticketNo = uuidv4();
-  let deliveryType = 1;
-  let companyId = {
-    companyId: 2,
-    companyName: 'chemicalMine ApS',
-    companyPhone: '+4500000004',
-    companyAddress: 'the danish mine address',
-    companyLocation: 'Aalborg',
-  };
+  console.log(
+    deliveryType,
+    deliveryType,
+    'this is drivers id',
+    drivers,
+    truckId,
+    chemicals,
+    ticketNo
+  );
 
-  let drivers = [1, 2];
+  // let ticketNo = uuidv4();
+  // let deliveryType = 1;
+  // let companyId = {
+  //   companyId: 2,
+  //   companyName: 'chemicalMine ApS',
+  //   companyPhone: '+4500000004',
+  //   companyAddress: 'the danish mine address',
+  //   companyLocation: 'Aalborg',
+  // };
+
+  // let drivers = [1, 2];
 
   // let drivers = [
   //   {
@@ -486,33 +503,33 @@ router.post('/deliveries', isAuthenticated, async (req, res) => {
   //     driverCompany: 'cheManager.com',
   //   },
   // ];
-  let truckId = 1;
-  let chemicals = [
-    {
-      warehouseNumber: 1,
-      depotId: 1,
-      chemicalId: 1,
-      warehouseId: 1,
-      chemicalName: 'Chemical A',
-      storage: 2,
-    },
-    {
-      warehouseNumber: 1,
-      chemicalId: 3,
-      depotId: 1,
-      warehouseId: 1,
-      chemicalName: 'Chemical C',
-      storage: 2,
-    },
-    {
-      warehouseNumber: 2,
-      chemicalId: 3,
-      depotId: 1,
-      warehouseId: 2,
-      chemicalName: 'Chemical C',
-      storage: 2,
-    },
-  ];
+  // let truckId = 1;
+  // let chemicals = [
+  //   {
+  //     warehouseNumber: 1,
+  //     depotId: 1,
+  //     chemicalId: 1,
+  //     warehouseId: 1,
+  //     chemicalName: 'Chemical A',
+  //     storage: 2,
+  //   },
+  //   {
+  //     warehouseNumber: 1,
+  //     chemicalId: 3,
+  //     depotId: 1,
+  //     warehouseId: 1,
+  //     chemicalName: 'Chemical C',
+  //     storage: 2,
+  //   },
+  //   {
+  //     warehouseNumber: 2,
+  //     chemicalId: 3,
+  //     depotId: 1,
+  //     warehouseId: 2,
+  //     chemicalName: 'Chemical C',
+  //     storage: 2,
+  //   },
+  // ];
 
   if (!deliveryType || !companyId || !drivers || !truckId || !chemicals) {
     return res.status(404).send({ response: 'Missing fields' });
@@ -565,7 +582,7 @@ router.post('/deliveries', isAuthenticated, async (req, res) => {
         status_id: 1,
         case_handler: randomWorker.id,
         drivers_backlog_id: driversBacklog.id,
-        company_id: companyId.companyId,
+        company_id: companyId,
         delivery_type: deliveryType,
         date_left: moment().add(6, 'days').format('YYYY-MM-DD HH:mm:ss'),
         date_scheduled: moment().add(7, 'days').format('YYYY-MM-DD HH:mm:ss'),

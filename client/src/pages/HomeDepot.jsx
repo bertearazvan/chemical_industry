@@ -77,7 +77,7 @@ const HomeDepot = () => {
     <Container>
       <PageTitle name={`Welcome ${username}`} />
       <PageHeader name="Choose action" />
-      <Button name="Upcoming Trucks" />
+      <Button name="Upcoming Deliveries" />
       <Button name="Check Ticket" onClick={checkTicket} />
       <Button name="Create Job" onClick={createJob} />
       <Button name="Warehouses Overview" />

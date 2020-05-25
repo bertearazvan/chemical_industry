@@ -13,15 +13,15 @@ const SelectTruck = () => {
   const deliveryType = location.state.deliveryType;
   const delivery = location.state.delivery;
   const companyID = location.state.companyID;
-  const driverID = location.state.driverID;
+  const driver = location.state.driver;
 
-  const selectTruck = (truckID) => {
+  const selectTruck = (truck) => {
     history.push('/select-chemicals', {
       delivery,
       deliveryType,
       companyID,
-      driverID,
-      truckID,
+      driver,
+      truck,
     });
   };
 
@@ -34,7 +34,7 @@ const SelectTruck = () => {
         <Button
           key={i}
           name={`Truck: ${truck.plate_no}`}
-          onClick={() => selectTruck(truck.id)}
+          onClick={() => selectTruck(truck)}
         />
       ))}
     </Container>
