@@ -14,6 +14,7 @@ import SelectDriver from './pages/SelectDriver';
 import SelectTruck from './pages/SelectTruck';
 import SelectChemicals from './pages/SelectChemicals';
 import FinalizeCreateJob from './pages/FinalizeCreateJob';
+import CheckStorage from './pages/CheckStorage';
 
 const App = () => {
   return (
@@ -39,6 +40,8 @@ const App = () => {
       <Route path="/select-chemicals" component={SelectChemicals} />
 
       <Route path="/finalize-job" component={FinalizeCreateJob} />
+
+      <Route path="/check-storage" component={CheckStorage} />
     </Switch>
   );
 };

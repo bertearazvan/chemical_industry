@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { getDeliveries } from '../networking/deliveries';
 import { warehouses } from '../networking/warehouses';
@@ -18,6 +18,8 @@ const HomeDepot = () => {
   const location = useLocation();
 
   const username = location.state.data;
+  const usernameCapitalized =
+    username.charAt(0).toUpperCase() + username.slice(1);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -75,7 +77,7 @@ const HomeDepot = () => {
   };
   return (
     <Container>
-      <PageTitle name={`Welcome ${username}`} />
+      <PageTitle name={`Welcome, ${usernameCapitalized}!`} />
       <PageHeader name="Choose action" />
       <Button name="Upcoming Deliveries" />
       <Button name="Check Ticket" onClick={checkTicket} />
