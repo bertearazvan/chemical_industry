@@ -3,7 +3,7 @@ import { useParams, useHistory } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import { ticket } from '../networking/deliveries';
+import { ticket, confirmDepotTicket } from '../networking/deliveries';
 
 import PageTitle from '../components/PageTitle';
 import Container from '../components/Container';
@@ -56,6 +56,16 @@ const TicketDetails = () => {
     }
   };
 
+  const confirmTicket = async () => {
+    try {
+      const { data } = await confirmDepotTicket({ ticketNumber: ticketno });
+      console.log(data);
+      history.push('/home-depot');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Container>
       <GoBack />
@@ -82,7 +92,7 @@ const TicketDetails = () => {
       ))}
       <ButtonContainer>
         <ButtonWrapper>
-          <Button name="Send" onClick={() => console.log('clicked')} />
+          <Button name="Send" onClick={() => confirmTicket()} />
           <Button name="Reject" onClick={() => console.log('clicked')} />
         </ButtonWrapper>
       </ButtonContainer>

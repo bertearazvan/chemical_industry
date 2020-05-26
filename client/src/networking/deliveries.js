@@ -7,8 +7,17 @@ export const getDeliveries = async (data) => {
   return axios.get(`${localhost}${url}/data`, data);
 };
 
+export const getActualDeliveries = async () => {
+  return axios.get(`${localhost}${url}`);
+};
+
 export const ticket = async (ticketNumber) => {
   return axios.get(`${localhost}${url}/ticket/${ticketNumber}`);
+};
+
+export const confirmDepotTicket = async (data) => {
+  console.log(data);
+  return axios.post(`${localhost}${url}/depot/confirm`, data);
 };
 
 export const checkCreate = async (data) => {
