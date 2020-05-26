@@ -612,6 +612,23 @@ router.post('/deliveries', isAuthenticated, async (req, res) => {
             warehouse_id: chemicals[i].warehouseId,
           });
 
+        if (!currentWarehouseStock[0]) {
+          await WarehouseStock.query(trx).insert({
+            warehouse_id: chemicals[i].warehouseId,
+            chemical_id: chemicals[i].chemicalId,
+            storage_amount: 0,
+          });
+        }
+
+        currentWarehouseStock = await WarehouseStock.query(trx)
+          .select('storage_amount')
+          .where({
+            chemical_id: chemicals[i].chemicalId,
+            warehouse_id: chemicals[i].warehouseId,
+          });
+
+        console.log(currentWarehouseStock);
+
         await WarehouseStock.query(trx)
           .update({
             storage_amount:
@@ -976,6 +993,12 @@ router.get(
 // confirm depot worker
 router.post('/deliveries/depot/confirm', isAuthenticated, async (req, res) => {
   const { ticketNumber } = req.body;
+  // console.log(ticketNumber);
+
+  if (!ticketNumber) {
+    return res.status(400).send({ response: 'Missing fields' });
+  }
+
   const trx = await Delivery.startTransaction();
 
   try {
@@ -1110,6 +1133,7 @@ router.get('/deliveries', isAuthenticated, async (req, res) => {
         .select(
           'delivery_types.id as deliveryTypeId',
           'deliveries.id',
+          'users.username as caseHandler',
           'delivery_types.name as deliveryType',
           'deliveries.ticket_no',
           'deliveries.date_left',
@@ -1117,6 +1141,7 @@ router.get('/deliveries', isAuthenticated, async (req, res) => {
           'deliveries.date_confirmed',
           'deliveries.date_scheduled'
         )
+        .join('users', { 'users.id': 'deliveries.case_handler' })
         .join('delivery_types', {
           'deliveries.delivery_type': 'delivery_types.id',
         })
@@ -1146,6 +1171,7 @@ router.get('/deliveries', isAuthenticated, async (req, res) => {
       const deliveryDrivers = await Delivery.query()
         .select(
           'drivers.id as driverId',
+          'drivers.username as username',
           'drivers.first_name as firstName',
           'drivers.last_name as lastName',
           'drivers.phone_no as phoneNumber',
