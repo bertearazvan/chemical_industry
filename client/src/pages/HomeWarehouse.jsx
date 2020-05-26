@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { warehouses } from '../networking/warehouses';
 
@@ -11,12 +11,7 @@ import PageTitle from '../components/PageTitle';
 
 const HomeWarehouse = () => {
   const history = useHistory();
-  const location = useLocation();
   const [storage, setStorage] = useState('');
-
-  const username = location.state.data;
-  const usernameCapitalized =
-    username.charAt(0).toUpperCase() + username.slice(1);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -57,7 +52,7 @@ const HomeWarehouse = () => {
   };
   return (
     <Container>
-      <PageTitle name={`Welcome, ${usernameCapitalized}!`} />
+      <PageTitle name="Welcome Warehouse Worker" />
       <PageHeader name="Choose action" />
       <Button name="Upcoming Deliveries" />
       <Button name="Confirm Ticket" onClick={checkTicket} />

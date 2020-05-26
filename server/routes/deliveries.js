@@ -466,12 +466,17 @@ router.post('/deliveries', isAuthenticated, async (req, res) => {
   } = req.body;
 
   console.log(
+    'this is delivery type',
     deliveryType,
-    deliveryType,
+    'this is company id',
+    companyId,
     'this is drivers id',
     drivers,
+    'this is truck id',
     truckId,
+    'these are chemicals',
     chemicals,
+    'this is ticket no',
     ticketNo
   );
 
@@ -699,7 +704,7 @@ router.post('/deliveries', isAuthenticated, async (req, res) => {
         status_id: 1,
         case_handler: user[0].id,
         drivers_backlog_id: driversBacklog.id,
-        company_id: companyId.companyId,
+        company_id: companyId,
         delivery_type: deliveryType,
         date_scheduled: moment().add(7, 'days').format('YYYY-MM-DD HH:mm:ss'),
       });

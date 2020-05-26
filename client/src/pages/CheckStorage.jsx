@@ -29,8 +29,8 @@ const CheckStorage = () => {
           key={i}
           chemical={chemical.chemical}
           quantity={chemical.storage}
-          warehouse={storage.warehouse_number}
-          isle="2"
+          warehouse={`WH ${storage.warehouse_number}`}
+          isle="Isle 2"
         />
       ))}
 

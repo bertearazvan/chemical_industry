@@ -23,9 +23,9 @@ const Login = () => {
       localStorage.setItem('token', data.token);
 
       if (data.response.warehouse_id === null) {
-        history.push('/home-depot', { data: data.response.username });
+        history.push('/home-depot');
       } else if (data.response.warehouse_id !== null) {
-        history.push('/home-warehouse', { data: data.response.username });
+        history.push('/home-warehouse');
       }
     } catch (err) {
       if (err) {
