@@ -18,8 +18,10 @@ const Ticket = () => {
     //   history.push('/');
     // }
   });
-
   const checkTicket = async () => {
+    if (!ticketNumber) {
+      return alert('You need to add a ticket number!');
+    }
     history.push(`/ticket-details/${ticketNumber}`);
   };
 
