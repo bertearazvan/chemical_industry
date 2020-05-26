@@ -32,7 +32,6 @@ const JobsBox = styled.div`
 `;
 
 const AllDeliveries = (props) => {
-  const [ticketNumber, setTicketNumber] = useState('');
   const history = useHistory();
   const location = useLocation();
   const [fromDateList] = useState([
@@ -55,7 +54,7 @@ const AllDeliveries = (props) => {
     moment().add(7, 'days').format(),
   ]);
   const [deliveryData, setDeliveryData] = useState(location.state.delivery);
-  let [deliveries, setDeliveries] = useState(location.state.actualDeliveries);
+  const [deliveries, setDeliveries] = useState(location.state.actualDeliveries);
   const [form, setForm] = useState({
     from: null,
     to: null,
@@ -137,12 +136,7 @@ const AllDeliveries = (props) => {
         );
       });
     }
-
-    if (arrayToReturn.length > 0) {
-      setDeliveries(arrayToReturn);
-    } else {
-      alert('No results');
-    }
+    setDeliveries(arrayToReturn);
   };
 
   return (
@@ -199,19 +193,23 @@ const AllDeliveries = (props) => {
       <div>
         <DeliveriesTable />
         <JobsBox>
-          {deliveries.map((delivery, i) => {
-            return (
-              <TableRowDeliveries
-                key={'delivery-' + i}
-                ticketNumber={delivery.ticket_no}
-                deliveryDate={moment(delivery.date_scheduled).format(
-                  'DD/MM/YY'
-                )}
-                deliveryType={delivery.deliveryType}
-                companyName={delivery.company.companyName}
-              />
-            );
-          })}
+          {deliveries.length > 0 ? (
+            deliveries.map((delivery, i) => {
+              return (
+                <TableRowDeliveries
+                  key={'delivery-' + i}
+                  ticketNumber={delivery.ticket_no}
+                  deliveryDate={moment(delivery.date_scheduled).format(
+                    'DD/MM/YY'
+                  )}
+                  deliveryType={delivery.deliveryType}
+                  companyName={delivery.company.companyName}
+                />
+              );
+            })
+          ) : (
+            <p style={{ textAlign: 'center' }}>Sorry no results</p>
+          )}
         </JobsBox>
       </div>
 

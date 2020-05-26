@@ -990,79 +990,77 @@ router.get(
   }
 );
 
-// confirm depot worker
-router.post('/deliveries/depot/confirm', isAuthenticated, async (req, res) => {
-  const { ticketNumber } = req.body;
-  // console.log(ticketNumber);
+// // confirm depot worker
+// router.post('/deliveries/depot/confirm', isAuthenticated, async (req, res) => {
+//   const { ticketNumber } = req.body;
+//   // console.log(ticketNumber);
 
-  if (!ticketNumber) {
-    return res.status(400).send({ response: 'Missing fields' });
-  }
+//   if (!ticketNumber) {
+//     return res.status(400).send({ response: 'Missing fields' });
+//   }
 
-  const trx = await Delivery.startTransaction();
+//   const trx = await Delivery.startTransaction();
 
-  try {
-    const user = await User.query().select().where({ id: req.userId });
+//   try {
+//     const user = await User.query().select().where({ id: req.userId });
 
-    const currentDelivery = await Delivery.query(trx)
-      .select()
-      .where({ ticket_no: ticketNumber });
-
-    if (!currentDelivery[0]) {
-      await trx.rollback();
-      return res.status(404).send({ response: 'Ticket does not exist' });
-    }
-
-    const updateDelivery = await Delivery.query(trx)
-      .update({
-        date_arrival: moment().format('YYYY-MM-DD HH:mm:ss'),
-        status_id: 3,
-      })
-      .where({ ticket_no: ticketNumber });
-
-    await Audit.query(trx).insert({
-      old_data: null,
-      new_data: moment().format('YYYY-MM-DD HH:mm:ss'),
-      column_name: 'date_arrival',
-      table_name: 'deliveries',
-      action: 'UPDATE',
-      user_action: user[0].id,
-    });
-
-    await Audit.query(trx).insert({
-      old_data: currentDelivery.status_id,
-      new_data: 3,
-      column_name: 'status_id',
-      table_name: 'deliveries',
-      action: 'UPDATE',
-      user_action: user[0].id,
-    });
-
-    if (!updateDelivery) {
-      await trx.rollback();
-      return res.status(404).send({ response: 'No delivery got updated' });
-    }
-
-    await trx.commit();
-    return res.status(200).send({ response: 'Delivery updated' });
-  } catch (err) {
-    console.log(err);
-    await trx.rollback();
-    return res.status(500).send({ response: 'Something went wrong' });
-  }
-});
+//     await trx.commit();
+//     return res.status(200).send({ response: 'Delivery updated' });
+//   } catch (err) {
+//     console.log(err);
+//     await trx.rollback();
+//     return res.status(500).send({ response: 'Something went wrong' });
+//   }
+// });
 
 // confirm warehouse worker
-router.post(
-  '/deliveries/warehouse/confirm',
-  isAuthenticated,
-  async (req, res) => {
-    // get ticketNumber and confirm it
-    const { ticketNumber } = req.body;
-    const trx = await Delivery.startTransaction();
-    try {
-      const user = await User.query(trx).select().where({ id: req.userId });
+router.post('/deliveries/confirm', isAuthenticated, async (req, res) => {
+  // get ticketNumber and confirm it
+  const { ticketNumber } = req.body;
+  const trx = await Delivery.startTransaction();
+  try {
+    const user = await User.query(trx).select().where({ id: req.userId });
 
+    if (user[0].warehouse_id === null) {
+      const currentDelivery = await Delivery.query(trx)
+        .select()
+        .where({ ticket_no: ticketNumber });
+
+      if (!currentDelivery[0]) {
+        await trx.rollback();
+        return res.status(404).send({ response: 'Ticket does not exist' });
+      }
+
+      const updateDelivery = await Delivery.query(trx)
+        .update({
+          date_arrival: moment().format('YYYY-MM-DD HH:mm:ss'),
+          status_id: 3,
+        })
+        .where({ ticket_no: ticketNumber });
+
+      await Audit.query(trx).insert({
+        old_data: null,
+        new_data: moment().format('YYYY-MM-DD HH:mm:ss'),
+        column_name: 'date_arrival',
+        table_name: 'deliveries',
+        action: 'UPDATE',
+        user_action: user[0].id,
+      });
+
+      await Audit.query(trx).insert({
+        old_data: currentDelivery.status_id,
+        new_data: 3,
+        column_name: 'status_id',
+        table_name: 'deliveries',
+        action: 'UPDATE',
+        user_action: user[0].id,
+      });
+
+      if (!updateDelivery) {
+        await trx.rollback();
+        return res.status(404).send({ response: 'No delivery got updated' });
+      }
+    } else {
       const currentDelivery = await Delivery.query(trx)
         .select()
         .where({ ticket_no: ticketNumber });
@@ -1108,17 +1106,17 @@ router.post(
         trx.rollback();
         return res.status(404).send({ response: 'No delivery got confirmed' });
       }
-
-      trx.commit();
-      return res.status(200).send({ response: 'Delivery updated' });
-    } catch (err) {
-      console.log(err);
-      trx.rollback();
-      return res.status(500).send({ response: 'Something went wrong' });
     }
-    // return all the data for that
+
+    trx.commit();
+    return res.status(200).send({ response: 'Delivery updated' });
+  } catch (err) {
+    console.log(err);
+    trx.rollback();
+    return res.status(500).send({ response: 'Something went wrong' });
   }
-);
+  // return all the data for that
+});
 
 // get all the deliveries
 router.get('/deliveries', isAuthenticated, async (req, res) => {
@@ -1238,7 +1236,7 @@ router.get('/deliveries', isAuthenticated, async (req, res) => {
 });
 
 // get all upcoming trucks for today
-router.get('/upcomingTrucks', async (req, res) => {
+router.get('/upcomingDeliveries', async (req, res) => {
   // get all the upcoming trucks
   // same for depot and warehouse
 

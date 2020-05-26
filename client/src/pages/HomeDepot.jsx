@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import { getDeliveries } from '../networking/deliveries';
 import { getActualDeliveries } from '../networking/deliveries';
+import { getUpcomingDeliveries } from '../networking/deliveries';
 import { warehouses } from '../networking/warehouses';
 import { setAuthToken } from '../networking/HTTPservice';
 
@@ -16,6 +17,7 @@ const HomeDepot = () => {
   const [deliveryData, setDeliveryData] = useState('');
   const [actualDeliveryData, setActualDeliveryData] = useState('');
   const [warehouseData, setWarehouseData] = useState('');
+  const [upcomingDeliveries, setUpcomingDeliveries] = useState('');
   const history = useHistory();
 
   useEffect(() => {
@@ -27,6 +29,7 @@ const HomeDepot = () => {
     getDeliveryData();
     getWarehouseData();
     getCorrectDeliveries();
+    getUpcomingTrucks();
   }, []);
 
   const getDeliveryData = async () => {
@@ -40,6 +43,21 @@ const HomeDepot = () => {
       if (err) {
         localStorage.clear();
         history.push('/');
+      }
+    }
+  };
+
+  const getUpcomingTrucks = async () => {
+    try {
+      const { data } = await getUpcomingDeliveries();
+      setUpcomingDeliveries(data);
+      console.log('====================================');
+      console.log('This is upcoming deliveries ', data);
+      console.log('====================================');
+    } catch (err) {
+      if (err) {
+        // localStorage.clear();
+        // history.push('/');
       }
     }
   };
@@ -89,6 +107,12 @@ const HomeDepot = () => {
     });
   };
 
+  const goToUpcomingDeliveries = () => {
+    history.push('/upcoming-deliveries', {
+      deliveries: upcomingDeliveries.response,
+    });
+  };
+
   const logoutUser = () => {
     localStorage.removeItem('token');
     history.push('/');
@@ -97,7 +121,7 @@ const HomeDepot = () => {
     <Container>
       <PageTitle name="Welcome Depot Worker" />
       <PageHeader name="Choose action" />
-      <Button name="Upcoming Deliveries" />
+      <Button name="Upcoming Deliveries" onClick={goToUpcomingDeliveries} />
       <Button name="Check Ticket" onClick={checkTicket} />
       <Button name="Create Job" onClick={createJob} />
       <Button name="Warehouses Overview" />
