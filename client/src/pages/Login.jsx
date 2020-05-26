@@ -13,6 +13,7 @@ import BottomButton from '../components/BottomButton';
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
   const history = useHistory();
 
   const loginUser = async () => {
@@ -36,7 +37,7 @@ const Login = () => {
 
   return (
     <Container>
-      <PageTitle name="Chemanager" />
+      <PageTitle name="CheManager" />
       <PageHeader name="Login" />
       <Input
         type="text"

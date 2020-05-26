@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { deliveries } from '../networking/deliveries';
+import { getDeliveries } from '../networking/deliveries';
 import { warehouses } from '../networking/warehouses';
 import { setAuthToken } from '../networking/HTTPservice';
 
@@ -12,6 +12,8 @@ import PageHeader from '../components/PageHeader';
 import PageTitle from '../components/PageTitle';
 
 const HomeDepot = () => {
+  const [deliveryData, setDeliveryData] = useState('');
+  const [warehouseData, setWarehouseData] = useState('');
   const history = useHistory();
 
   useEffect(() => {
@@ -22,13 +24,14 @@ const HomeDepot = () => {
     }
     getDeliveryData();
     getWarehouseData();
-  });
+  }, []);
 
   const getDeliveryData = async () => {
     try {
-      const { data } = await deliveries();
+      const { data } = await getDeliveries();
+      setDeliveryData(data);
       console.log('====================================');
-      console.log('This is delivery ', data);
+      console.log('This is delivery ', data.response);
       console.log('====================================');
     } catch (err) {
       if (err) {
@@ -41,8 +44,9 @@ const HomeDepot = () => {
   const getWarehouseData = async () => {
     try {
       const { data } = await warehouses();
+      setWarehouseData(data);
       console.log('====================================');
-      console.log('This is warehouse ', data);
+      console.log('This is warehouse ', data.response);
       console.log('====================================');
     } catch (err) {
       if (err) {
@@ -56,17 +60,23 @@ const HomeDepot = () => {
     history.push('/ticket-number');
   };
 
+  const createJob = () => {
+    history.push('/create-job', {
+      delivery: deliveryData.response,
+    });
+  };
+
   const logoutUser = () => {
     localStorage.removeItem('token');
     history.push('/');
   };
   return (
     <Container>
-      <PageTitle name="Welcome depot worker" />
+      <PageTitle name="Welcome Depot Worker" />
       <PageHeader name="Choose action" />
-      <Button name="Upcoming Trucks" />
+      <Button name="Upcoming Deliveries" />
       <Button name="Check Ticket" onClick={checkTicket} />
-      <Button name="Create Job" />
+      <Button name="Create Job" onClick={createJob} />
       <Button name="Warehouses Overview" />
       <Button name="All Deliveries" />
       <BottomButton name="Logout" onClick={logoutUser} />

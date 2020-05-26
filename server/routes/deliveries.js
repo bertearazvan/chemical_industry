@@ -27,7 +27,7 @@ router.get(
 
     const user = await User.query().select().where({ id: req.userId });
     if (user[0].warehouse_id === null) {
-      return res.send({ reponse: req.deliveryObject });
+      return res.send({ response: req.deliveryObject });
     } else {
       return res.status(401).send({ response: 'Not authorized' });
     }
@@ -40,24 +40,24 @@ router.post(
   isAuthenticated,
   getDataDeliveries,
   async (req, res) => {
-    // let { chemicals, deliveryType } = req.body;
+    let { chemicals, deliveryType } = req.body;
 
-    let deliveryType = 1; // delivery type pickup
-    let chemicals = [
-      {
-        chemical: 'Chemical A',
-        storage: 6,
-        id: 1,
-      },
-      {
-        chemical: 'Chemical C',
-        storage: 1,
-        id: 3,
-      },
-    ];
+    // let deliveryType = 1; // delivery type pickup
+    // let chemicals = [
+    //   {
+    //     chemical: 'Chemical A',
+    //     storage: 6,
+    //     id: 1,
+    //   },
+    //   {
+    //     chemical: 'Chemical C',
+    //     storage: 1,
+    //     id: 3,
+    //   },
+    // ];
 
     if (!chemicals || !deliveryType) {
-      res.status(404).send({ response: 'Missing fields' });
+      return res.status(404).send({ response: 'Missing fields' });
     }
 
     try {
@@ -434,10 +434,13 @@ router.post(
 
         if (chemicalsStorage === storageToCompare) {
           objectToReturn.ticketNumber = uuidv4();
+          objectToReturn.arrival = moment()
+            .add(7, 'days')
+            .format('YYYY-MM-DD HH:mm:ss');
           objectToReturn.possibleStorage = possibleStorage;
-          return res.send({ response: objectToReturn });
+          return res.status(200).send({ response: objectToReturn });
         } else {
-          res.status(404).send({
+          return res.status(404).send({
             response: 'We could not satisfy the request from this depot',
           });
         }
@@ -453,19 +456,41 @@ router.post(
 
 // route for confirming a job.
 router.post('/deliveries', isAuthenticated, async (req, res) => {
-  // let { deliveryType, companyId, drivers, truckId, chemicals, ticketNo } = req.body;
+  let {
+    deliveryType,
+    companyId,
+    drivers,
+    truckId,
+    chemicals,
+    ticketNo,
+  } = req.body;
 
-  let ticketNo = uuidv4();
-  let deliveryType = 1;
-  let companyId = {
-    companyId: 2,
-    companyName: 'chemicalMine ApS',
-    companyPhone: '+4500000004',
-    companyAddress: 'the danish mine address',
-    companyLocation: 'Aalborg',
-  };
+  console.log(
+    'this is delivery type',
+    deliveryType,
+    'this is company id',
+    companyId,
+    'this is drivers id',
+    drivers,
+    'this is truck id',
+    truckId,
+    'these are chemicals',
+    chemicals,
+    'this is ticket no',
+    ticketNo
+  );
 
-  let drivers = [1, 2];
+  // let ticketNo = uuidv4();
+  // let deliveryType = 1;
+  // let companyId = {
+  //   companyId: 2,
+  //   companyName: 'chemicalMine ApS',
+  //   companyPhone: '+4500000004',
+  //   companyAddress: 'the danish mine address',
+  //   companyLocation: 'Aalborg',
+  // };
+
+  // let drivers = [1, 2];
 
   // let drivers = [
   //   {
@@ -483,33 +508,33 @@ router.post('/deliveries', isAuthenticated, async (req, res) => {
   //     driverCompany: 'cheManager.com',
   //   },
   // ];
-  let truckId = 1;
-  let chemicals = [
-    {
-      warehouseNumber: 1,
-      depotId: 1,
-      chemicalId: 1,
-      warehouseId: 1,
-      chemicalName: 'Chemical A',
-      storage: 2,
-    },
-    {
-      warehouseNumber: 1,
-      chemicalId: 3,
-      depotId: 1,
-      warehouseId: 1,
-      chemicalName: 'Chemical C',
-      storage: 2,
-    },
-    {
-      warehouseNumber: 2,
-      chemicalId: 3,
-      depotId: 1,
-      warehouseId: 2,
-      chemicalName: 'Chemical C',
-      storage: 2,
-    },
-  ];
+  // let truckId = 1;
+  // let chemicals = [
+  //   {
+  //     warehouseNumber: 1,
+  //     depotId: 1,
+  //     chemicalId: 1,
+  //     warehouseId: 1,
+  //     chemicalName: 'Chemical A',
+  //     storage: 2,
+  //   },
+  //   {
+  //     warehouseNumber: 1,
+  //     chemicalId: 3,
+  //     depotId: 1,
+  //     warehouseId: 1,
+  //     chemicalName: 'Chemical C',
+  //     storage: 2,
+  //   },
+  //   {
+  //     warehouseNumber: 2,
+  //     chemicalId: 3,
+  //     depotId: 1,
+  //     warehouseId: 2,
+  //     chemicalName: 'Chemical C',
+  //     storage: 2,
+  //   },
+  // ];
 
   if (!deliveryType || !companyId || !drivers || !truckId || !chemicals) {
     return res.status(404).send({ response: 'Missing fields' });
@@ -562,7 +587,7 @@ router.post('/deliveries', isAuthenticated, async (req, res) => {
         status_id: 1,
         case_handler: randomWorker.id,
         drivers_backlog_id: driversBacklog.id,
-        company_id: companyId.companyId,
+        company_id: companyId,
         delivery_type: deliveryType,
         date_left: moment().add(6, 'days').format('YYYY-MM-DD HH:mm:ss'),
         date_scheduled: moment().add(7, 'days').format('YYYY-MM-DD HH:mm:ss'),
@@ -679,7 +704,7 @@ router.post('/deliveries', isAuthenticated, async (req, res) => {
         status_id: 1,
         case_handler: user[0].id,
         drivers_backlog_id: driversBacklog.id,
-        company_id: companyId.companyId,
+        company_id: companyId,
         delivery_type: deliveryType,
         date_scheduled: moment().add(7, 'days').format('YYYY-MM-DD HH:mm:ss'),
       });

@@ -24,7 +24,7 @@ const TableRow = (props) => {
     <Wrapper>
       <Row>
         <TableRowStyled>{props.chemical}</TableRowStyled>
-        <TableRowStyled>{props.quantity}kg</TableRowStyled>
+        <TableRowStyled>{props.quantity} barels</TableRowStyled>
         <TableRowStyled>{props.warehouse}</TableRowStyled>
         <TableRowStyled>{props.isle}</TableRowStyled>
       </Row>
