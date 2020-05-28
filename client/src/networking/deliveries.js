@@ -11,13 +11,17 @@ export const getActualDeliveries = async () => {
   return axios.get(`${localhost}${url}`);
 };
 
+export const getUpcomingDeliveries = async () => {
+  return axios.get(`${localhost}/upcomingDeliveries`);
+};
+
 export const ticket = async (ticketNumber) => {
   return axios.get(`${localhost}${url}/ticket/${ticketNumber}`);
 };
 
 export const confirmDepotTicket = async (data) => {
   console.log(data);
-  return axios.post(`${localhost}${url}/depot/confirm`, data);
+  return axios.post(`${localhost}${url}/confirm`, data);
 };
 
 export const checkCreate = async (data) => {

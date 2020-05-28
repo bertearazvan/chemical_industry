@@ -4,6 +4,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { ticket, confirmDepotTicket } from '../networking/deliveries';
+import { setAuthToken } from '../networking/HTTPservice';
 
 import PageTitle from '../components/PageTitle';
 import Container from '../components/Container';
@@ -37,6 +38,11 @@ const TicketDetails = () => {
   const history = useHistory();
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      setAuthToken(token);
+    }
     getData();
   }, []);
 
@@ -62,7 +68,7 @@ const TicketDetails = () => {
       console.log(data);
       history.push('/home-depot');
     } catch (err) {
-      console.log(err);
+      alert(err.response.data.response);
     }
   };
 

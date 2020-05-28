@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { setAuthToken } from '../networking/HTTPservice';
 
 import PageHeader from '../components/PageHeader';
 import PageTitle from '../components/PageTitle';
@@ -14,6 +15,10 @@ const Ticket = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+
+    if (token) {
+      setAuthToken(token);
+    }
     // if (!token) {
     //   history.push('/');
     // }
