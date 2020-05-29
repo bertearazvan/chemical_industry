@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/chemical_industry_frontend/static/css/main.03180f2a.chunk.css",
-    "main.js": "/chemical_industry_frontend/static/js/main.6a527342.chunk.js",
-    "main.js.map": "/chemical_industry_frontend/static/js/main.6a527342.chunk.js.map",
-    "runtime-main.js": "/chemical_industry_frontend/static/js/runtime-main.96c1a8d3.js",
-    "runtime-main.js.map": "/chemical_industry_frontend/static/js/runtime-main.96c1a8d3.js.map",
-    "static/js/2.59a1df63.chunk.js": "/chemical_industry_frontend/static/js/2.59a1df63.chunk.js",
-    "static/js/2.59a1df63.chunk.js.map": "/chemical_industry_frontend/static/js/2.59a1df63.chunk.js.map",
-    "index.html": "/chemical_industry_frontend/index.html",
-    "precache-manifest.c03e30d3a18be0458ed9b3d0120226ff.js": "/chemical_industry_frontend/precache-manifest.c03e30d3a18be0458ed9b3d0120226ff.js",
-    "service-worker.js": "/chemical_industry_frontend/service-worker.js",
-    "static/css/main.03180f2a.chunk.css.map": "/chemical_industry_frontend/static/css/main.03180f2a.chunk.css.map",
-    "static/js/2.59a1df63.chunk.js.LICENSE.txt": "/chemical_industry_frontend/static/js/2.59a1df63.chunk.js.LICENSE.txt"
+    "main.css": "/chemical_industry/static/css/main.03180f2a.chunk.css",
+    "main.js": "/chemical_industry/static/js/main.e4dc6807.chunk.js",
+    "main.js.map": "/chemical_industry/static/js/main.e4dc6807.chunk.js.map",
+    "runtime-main.js": "/chemical_industry/static/js/runtime-main.20cd470a.js",
+    "runtime-main.js.map": "/chemical_industry/static/js/runtime-main.20cd470a.js.map",
+    "static/js/2.5be5fd2e.chunk.js": "/chemical_industry/static/js/2.5be5fd2e.chunk.js",
+    "static/js/2.5be5fd2e.chunk.js.map": "/chemical_industry/static/js/2.5be5fd2e.chunk.js.map",
+    "index.html": "/chemical_industry/index.html",
+    "precache-manifest.53af8dfeb45cbd260d6dee78f05bc975.js": "/chemical_industry/precache-manifest.53af8dfeb45cbd260d6dee78f05bc975.js",
+    "service-worker.js": "/chemical_industry/service-worker.js",
+    "static/css/main.03180f2a.chunk.css.map": "/chemical_industry/static/css/main.03180f2a.chunk.css.map",
+    "static/js/2.5be5fd2e.chunk.js.LICENSE.txt": "/chemical_industry/static/js/2.5be5fd2e.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.96c1a8d3.js",
-    "static/js/2.59a1df63.chunk.js",
+    "static/js/runtime-main.20cd470a.js",
+    "static/js/2.5be5fd2e.chunk.js",
     "static/css/main.03180f2a.chunk.css",
-    "static/js/main.6a527342.chunk.js"
+    "static/js/main.e4dc6807.chunk.js"
   ]
 }
