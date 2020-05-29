@@ -22,41 +22,39 @@ import RejectTicket from './pages/RejectTicket';
 
 const App = () => {
   return (
-    <HashRouter basename="/">
-      <Switch>
-        <Route exact path="/" component={Login} />
+    <Switch>
+      <Route exact path="/" component={Login} />
 
-        <Route path="/home-depot" component={HomeDepot} />
+      <Route path="/home-depot" component={HomeDepot} />
 
-        <Route path="/home-warehouse" component={HomeWarehouse} />
+      <Route path="/home-warehouse" component={HomeWarehouse} />
 
-        <Route path="/ticket-number" component={TicketNumber} />
+      <Route path="/ticket-number" component={TicketNumber} />
 
-        <Route path="/reject-ticket" component={RejectTicket} />
+      <Route path="/reject-ticket" component={RejectTicket} />
 
-        <Route path="/ticket-details/:ticketNumber" component={TicketDetails} />
+      <Route path="/ticket-details/:ticketNumber" component={TicketDetails} />
 
-        <Route path="/create-job" component={CreateJob} />
+      <Route path="/create-job" component={CreateJob} />
 
-        <Route path="/select-company-job" component={SelectCompanyJob} />
+      <Route path="/select-company-job" component={SelectCompanyJob} />
 
-        <Route path="/select-driver" component={SelectDriver} />
+      <Route path="/select-driver" component={SelectDriver} />
 
-        <Route path="/select-truck" component={SelectTruck} />
+      <Route path="/select-truck" component={SelectTruck} />
 
-        <Route path="/select-chemicals" component={SelectChemicals} />
+      <Route path="/select-chemicals" component={SelectChemicals} />
 
-        <Route path="/finalize-job" component={FinalizeCreateJob} />
+      <Route path="/finalize-job" component={FinalizeCreateJob} />
 
-        <Route path="/check-storage" component={CheckStorage} />
+      <Route path="/check-storage" component={CheckStorage} />
 
-        <Route path="/all-deliveries" component={AllDeliveries} />
+      <Route path="/all-deliveries" component={AllDeliveries} />
 
-        <Route path="/upcoming-deliveries" component={UpcomingDeliveries} />
+      <Route path="/upcoming-deliveries" component={UpcomingDeliveries} />
 
-        <Route path="/warehouses-overview" component={WarehousesOverview} />
-      </Switch>
-    </HashRouter>
+      <Route path="/warehouses-overview" component={WarehousesOverview} />
+    </Switch>
   );
 };
 
