@@ -17,6 +17,8 @@ import FinalizeCreateJob from './pages/FinalizeCreateJob';
 import CheckStorage from './pages/CheckStorage';
 import AllDeliveries from './pages/AllDeliveries';
 import UpcomingDeliveries from './pages/UpcomingDeliveries';
+import WarehousesOverview from './pages/WarehousesOverview';
+import RejectTicket from './pages/RejectTicket';
 
 const App = () => {
   return (
@@ -28,6 +30,8 @@ const App = () => {
       <Route path="/home-warehouse" component={HomeWarehouse} />
 
       <Route path="/ticket-number" component={TicketNumber} />
+
+      <Route path="/reject-ticket" component={RejectTicket} />
 
       <Route path="/ticket-details/:ticketNumber" component={TicketDetails} />
 
@@ -48,6 +52,8 @@ const App = () => {
       <Route path="/all-deliveries" component={AllDeliveries} />
 
       <Route path="/upcoming-deliveries" component={UpcomingDeliveries} />
+
+      <Route path="/warehouses-overview" component={WarehousesOverview} />
     </Switch>
   );
 };

@@ -32,6 +32,14 @@ const JobsBox = styled.div`
   margin-top: 15px;
 `;
 
+const StyledTimespan = styled.h4`
+  position: relative;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  color: white;
+`;
+
 const UpcomingDeliveries = () => {
   const history = useHistory();
   const location = useLocation();
@@ -41,13 +49,11 @@ const UpcomingDeliveries = () => {
     <Container>
       <GoBack />
       <PageTitle name="Upcoming deliveries" />
-      <PageHeader
-        name={
-          moment().format('DD-MM-YY') +
+      <StyledTimespan>
+        {moment().format('DD-MM-YY') +
           ' to ' +
-          moment().add(6, 'days').format('DD-MM-YY')
-        }
-      />
+          moment().add(6, 'days').format('DD-MM-YY')}
+      </StyledTimespan>
 
       <div>
         <DeliveriesTable />

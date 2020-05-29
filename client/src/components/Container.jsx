@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const StyledDivWrapper = styled.div`
   height: 100vh;
   width: 100vw;
-  background-color: #6a1b9a;
+  background-color: #6c49b8;
 `;
 
 const StyledDiv = styled.div`

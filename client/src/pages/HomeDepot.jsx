@@ -113,6 +113,12 @@ const HomeDepot = () => {
     });
   };
 
+  const warehousesOverview = () => {
+    history.push('/warehouses-overview', {
+      warehouses: warehouseData,
+    });
+  };
+
   const logoutUser = () => {
     localStorage.removeItem('token');
     history.push('/');
@@ -124,7 +130,7 @@ const HomeDepot = () => {
       <Button name="Upcoming Deliveries" onClick={goToUpcomingDeliveries} />
       <Button name="Check Ticket" onClick={checkTicket} />
       <Button name="Create Job" onClick={createJob} />
-      <Button name="Warehouses Overview" />
+      <Button name="Warehouses Overview" onClick={warehousesOverview} />
       <Button name="All Deliveries" onClick={allDeliveries} />
       <BottomButton name="Logout" onClick={logoutUser} />
     </Container>

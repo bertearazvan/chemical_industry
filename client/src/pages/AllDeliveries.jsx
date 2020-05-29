@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useLocation, useHistory } from 'react-router-dom';
 import moment from 'moment';
-import DatePicker from 'react-datepicker';
 
 import PageTitle from '../components/PageTitle';
 import SelectInput from '../components/SelectInput';
@@ -53,7 +52,7 @@ const AllDeliveries = (props) => {
     moment().add(6, 'days').format(),
     moment().add(7, 'days').format(),
   ]);
-  const [deliveryData, setDeliveryData] = useState(location.state.delivery);
+  const [deliveryData] = useState(location.state.delivery);
   const [deliveries, setDeliveries] = useState(location.state.actualDeliveries);
   const [form, setForm] = useState({
     from: null,
@@ -72,9 +71,9 @@ const AllDeliveries = (props) => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    // if (!token) {
-    //   history.push('/');
-    // }
+    if (!token) {
+      history.push('/');
+    }
   }, []);
 
   const onAddFilter = () => {
