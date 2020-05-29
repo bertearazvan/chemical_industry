@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/chemical_industry/client/build/static/css/main.03180f2a.chunk.css",
+    "main.js": "/chemical_industry/client/build/static/js/main.2cf225d7.chunk.js",
+    "main.js.map": "/chemical_industry/client/build/static/js/main.2cf225d7.chunk.js.map",
+    "runtime-main.js": "/chemical_industry/client/build/static/js/runtime-main.d4483934.js",
+    "runtime-main.js.map": "/chemical_industry/client/build/static/js/runtime-main.d4483934.js.map",
+    "static/js/2.eb60a3ad.chunk.js": "/chemical_industry/client/build/static/js/2.eb60a3ad.chunk.js",
+    "static/js/2.eb60a3ad.chunk.js.map": "/chemical_industry/client/build/static/js/2.eb60a3ad.chunk.js.map",
+    "index.html": "/chemical_industry/client/build/index.html",
+    "precache-manifest.e93cae9a65dc344d6a1d6e332c94de27.js": "/chemical_industry/client/build/precache-manifest.e93cae9a65dc344d6a1d6e332c94de27.js",
+    "service-worker.js": "/chemical_industry/client/build/service-worker.js",
+    "static/css/main.03180f2a.chunk.css.map": "/chemical_industry/client/build/static/css/main.03180f2a.chunk.css.map",
+    "static/js/2.eb60a3ad.chunk.js.LICENSE.txt": "/chemical_industry/client/build/static/js/2.eb60a3ad.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.d4483934.js",
+    "static/js/2.eb60a3ad.chunk.js",
+    "static/css/main.03180f2a.chunk.css",
+    "static/js/main.2cf225d7.chunk.js"
+  ]
+}
