@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/chemical_industry/static/css/main.03180f2a.chunk.css",
-    "main.js": "/chemical_industry/static/js/main.34e2023f.chunk.js",
-    "main.js.map": "/chemical_industry/static/js/main.34e2023f.chunk.js.map",
+    "main.js": "/chemical_industry/static/js/main.97996ce5.chunk.js",
+    "main.js.map": "/chemical_industry/static/js/main.97996ce5.chunk.js.map",
     "runtime-main.js": "/chemical_industry/static/js/runtime-main.20cd470a.js",
     "runtime-main.js.map": "/chemical_industry/static/js/runtime-main.20cd470a.js.map",
-    "static/js/2.353cfb8e.chunk.js": "/chemical_industry/static/js/2.353cfb8e.chunk.js",
-    "static/js/2.353cfb8e.chunk.js.map": "/chemical_industry/static/js/2.353cfb8e.chunk.js.map",
+    "static/js/2.5be5fd2e.chunk.js": "/chemical_industry/static/js/2.5be5fd2e.chunk.js",
+    "static/js/2.5be5fd2e.chunk.js.map": "/chemical_industry/static/js/2.5be5fd2e.chunk.js.map",
     "index.html": "/chemical_industry/index.html",
-    "precache-manifest.8d0ef2dae7d4714604e1441ef7934dfa.js": "/chemical_industry/precache-manifest.8d0ef2dae7d4714604e1441ef7934dfa.js",
+    "precache-manifest.89b196faad5429b086d7c13583a8b471.js": "/chemical_industry/precache-manifest.89b196faad5429b086d7c13583a8b471.js",
     "service-worker.js": "/chemical_industry/service-worker.js",
     "static/css/main.03180f2a.chunk.css.map": "/chemical_industry/static/css/main.03180f2a.chunk.css.map",
-    "static/js/2.353cfb8e.chunk.js.LICENSE.txt": "/chemical_industry/static/js/2.353cfb8e.chunk.js.LICENSE.txt"
+    "static/js/2.5be5fd2e.chunk.js.LICENSE.txt": "/chemical_industry/static/js/2.5be5fd2e.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.20cd470a.js",
-    "static/js/2.353cfb8e.chunk.js",
+    "static/js/2.5be5fd2e.chunk.js",
     "static/css/main.03180f2a.chunk.css",
-    "static/js/main.34e2023f.chunk.js"
+    "static/js/main.97996ce5.chunk.js"
   ]
 }
