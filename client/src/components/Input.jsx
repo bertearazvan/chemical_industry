@@ -10,6 +10,8 @@ const StyledInput = styled.input`
   box-shadow: 0px 3px 5px 2px rgba(0, 0, 0, 0.13);
   font-size: 15px;
   outline: none;
+  color: #b7b7b7;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 
   z-index: 5;
   margin-bottom: 15px;
@@ -19,6 +21,7 @@ const StyledInput = styled.input`
 const Input = (props) => {
   return (
     <StyledInput
+      className="styledInput"
       type={props.type}
       placeholder={props.placeholder}
       onChange={props.onChange}

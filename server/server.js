@@ -1,9 +1,11 @@
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 const app = express();
 
 // ##### Middleware #####
-app.set('trust proxy', 1);
+app.use(helmet());
+// app.set('trust proxy', 1);
 app.use(cors());
 app.use(
   express.urlencoded({

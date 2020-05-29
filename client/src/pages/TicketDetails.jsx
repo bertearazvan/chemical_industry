@@ -72,6 +72,12 @@ const TicketDetails = () => {
     }
   };
 
+  const rejectTicket = async () => {
+    history.push('/reject-ticket', {
+      ticketNumber,
+    });
+  };
+
   return (
     <Container>
       <GoBack />
@@ -99,7 +105,7 @@ const TicketDetails = () => {
       <ButtonContainer>
         <ButtonWrapper>
           <Button name="Send" onClick={() => confirmTicket()} />
-          <Button name="Reject" onClick={() => console.log('clicked')} />
+          <Button name="Reject" onClick={() => rejectTicket()} />
         </ButtonWrapper>
       </ButtonContainer>
     </Container>

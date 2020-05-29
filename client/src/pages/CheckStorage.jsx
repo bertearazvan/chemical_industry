@@ -22,7 +22,11 @@ const CheckStorage = () => {
         warehouse={storage.warehouse_id}
         capacity={storage.warehouse_total_capacity}
       />
-      <AvailableCapacityStorage capacity={storage.warehouse_current_storage} />
+      <AvailableCapacityStorage
+        capacity={
+          storage.warehouse_total_capacity - storage.warehouse_current_storage
+        }
+      />
       <InStockStorage />
       {storage.chemicals.map((chemical, i) => (
         <TableRow
