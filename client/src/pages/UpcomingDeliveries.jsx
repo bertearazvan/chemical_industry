@@ -33,7 +33,9 @@ const JobsBox = styled.div`
 `;
 
 const StyledTimespan = styled.h4`
-  position: relative;
+  position: absolute;
+  top: -30px;
+  width: 83%;
   text-align: center;
   font-size: 18px;
   font-weight: 500;
@@ -58,17 +60,25 @@ const UpcomingDeliveries = () => {
       <div>
         <DeliveriesTable />
         <JobsBox>
-          {deliveries.map((delivery, i) => {
-            return (
-              <TableRowDeliveries
-                key={'delivery-' + i}
-                ticketNumber={delivery.ticketNumber}
-                deliveryDate={moment(delivery.dateScheduled).format('DD/MM/YY')}
-                deliveryType={delivery.deliveryType}
-                companyName={delivery.company}
-              />
-            );
-          })}
+          {deliveries.length > 0 ? (
+            deliveries.map((delivery, i) => {
+              return (
+                <TableRowDeliveries
+                  key={'delivery-' + i}
+                  ticketNumber={delivery.ticketNumber}
+                  deliveryDate={moment(delivery.dateScheduled).format(
+                    'DD/MM/YY'
+                  )}
+                  deliveryType={delivery.deliveryType}
+                  companyName={delivery.company}
+                />
+              );
+            })
+          ) : (
+            <p style={{ textAlign: 'center' }}>
+              There are no upcoming deliveries
+            </p>
+          )}
         </JobsBox>
       </div>
     </Container>
