@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const app = express();
@@ -24,9 +25,11 @@ app.use(usersRoute);
 app.use(warehousesRoute);
 app.use(deliveriesRoute);
 
-app.get('/', (req, res) => {
-  res.status(200).send({ response: 'Responsive route' });
-});
+app.use('/', express.static(path.join(__dirname, 'public')));
+
+// app.get('/', (req, res) => {
+//   res.status(200).send({ response: 'Responsive route' });
+// });
 
 // ##################
 
