@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2f8a5ecc9783b63b0d4d46f40a11c8c7",
+    "revision": "48f838b67120021c4d11baa0229e2790",
     "url": "/chemical_industry/index.html"
   },
   {
-    "revision": "a7b2bfbf2b573cc9e813",
+    "revision": "29756ce95934d81a0423",
     "url": "/chemical_industry/static/css/main.03180f2a.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/chemical_industry/static/js/2.353cfb8e.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "a7b2bfbf2b573cc9e813",
-    "url": "/chemical_industry/static/js/main.4392ecec.chunk.js"
+    "revision": "29756ce95934d81a0423",
+    "url": "/chemical_industry/static/js/main.c2d4c4bd.chunk.js"
   },
   {
     "revision": "f55263bb442adfd02a93",
