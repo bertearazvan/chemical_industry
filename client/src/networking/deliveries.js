@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const url = '/deliveries';
-const localhost = 'https://ec2-52-204-71-158.compute-1.amazonaws.com';
+const localhost = 'http://ec2-100-25-10-187.compute-1.amazonaws.com';
 
 export const getDeliveries = async (data) => {
   return axios.get(`${localhost}${url}/data`, data);

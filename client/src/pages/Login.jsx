@@ -17,6 +17,7 @@ const Login = () => {
   const history = useHistory();
 
   const loginUser = async () => {
+    console.log('click');
     try {
       const { data } = await login({ username, password });
       setAuthToken(data.token);
