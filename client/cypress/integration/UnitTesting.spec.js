@@ -2,7 +2,8 @@
 
 context('Unit testing', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/');
+    cy.visit('');
+    cy.viewport(375, 900);
   });
   describe('Button, Input, Container', () => {
     it('should check the button', () => {
