@@ -33,7 +33,7 @@ const StyledDivContent = styled.div`
 
 const Container = (props) => {
   return (
-    <StyledDivWrapper>
+    <StyledDivWrapper data-cy="container">
       <StyledDiv>
         <StyledDivContent>{props.children}</StyledDivContent>
       </StyledDiv>

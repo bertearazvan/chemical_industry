@@ -29,7 +29,9 @@ const BottomButton = (props) => {
   return (
     <ButtonPosition>
       <ButtonWrapper>
-        <StyledButton onClick={props.onClick}>{props.name}</StyledButton>
+        <StyledButton data-cy="bottom-button" onClick={props.onClick}>
+          {props.name}
+        </StyledButton>
       </ButtonWrapper>
     </ButtonPosition>
   );
