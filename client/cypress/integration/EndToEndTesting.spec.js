@@ -9,9 +9,15 @@ context('End to end testing', () => {
       cy.get('[data-cy=input]').first().type('anders');
       cy.get('[data-cy=input]').last().type('password');
       cy.get('[data-cy=bottom-button]').click();
+      cy.url().should('include', '/home-depot');
       cy.get('[data-cy=button]').eq(1).click();
+      cy.url().should('include', '/ticket-number');
       cy.get('[data-cy=input]').type('a4e36484-7836-4049-8cbd-837026161da7');
       cy.get('[data-cy=bottom-button]').click();
+      cy.url().should(
+        'include',
+        '/ticket-details/a4e36484-7836-4049-8cbd-837026161da7'
+      );
       cy.get('[data-cy=row-name]')
         .first()
         .invoke('text')
@@ -41,8 +47,10 @@ context('End to end testing', () => {
       cy.get('[data-cy=input]').first().type('steven');
       cy.get('[data-cy=input]').last().type('password');
       cy.get('[data-cy=bottom-button]').click();
+      cy.url().should('include', '/home-warehouse');
       cy.wait(1000);
       cy.get('[data-cy=button]').eq(2).click();
+      cy.url().should('include', '/check-storage');
       cy.get('[data-cy=available-capacity]')
         .invoke('text')
         .should('contain', 'Available Capacity');
@@ -54,19 +62,26 @@ context('End to end testing', () => {
       cy.get('[data-cy=input]').first().type('anders');
       cy.get('[data-cy=input]').last().type('password');
       cy.get('[data-cy=bottom-button]').click();
+      cy.url().should('include', '/home-depot');
       cy.wait(1000);
       cy.get('[data-cy=button]').eq(2).click();
+      cy.url().should('include', '/create-job');
       cy.wait(1000);
       cy.get('[data-cy=button]').first().click();
+      cy.url().should('include', '/select-company-job');
       cy.wait(1000);
       cy.get('[data-cy=button]').first().click();
+      cy.url().should('include', '/select-driver');
       cy.wait(1000);
       cy.get('[data-cy=button]').last().click();
+      cy.url().should('include', '/select-truck');
       cy.wait(1000);
       cy.get('[data-cy=button]').eq(2).click();
+      cy.url().should('include', '/select-chemicals');
       cy.wait(1000);
       cy.get('[data-cy=input]').first().type(2);
       cy.get('[data-cy=bottom-button]').click();
+      cy.url().should('include', '/finalize-job');
       cy.wait(1000);
       cy.get('[data-cy=row-name]')
         .first()
