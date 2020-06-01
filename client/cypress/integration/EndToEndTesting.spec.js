@@ -2,7 +2,8 @@
 
 context('End to end testing', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/');
+    cy.visit('');
+    cy.viewport(375, 900);
   });
   describe('Check the flow of the app', () => {
     it('should login as a depot worker and check for a ticket number', () => {

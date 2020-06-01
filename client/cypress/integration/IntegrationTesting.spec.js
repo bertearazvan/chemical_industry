@@ -2,7 +2,8 @@
 
 context('Integration testing', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/');
+    cy.visit('');
+    cy.viewport(375, 900);
   });
   describe('Integration of different components', () => {
     it('should check if the login has two inputs and a button', () => {
