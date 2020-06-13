@@ -22,16 +22,16 @@ const Row = styled.div`
 const DeliveryTable = (props) => {
   return (
     <Wrapper>
-      <RowName>TICKET NUMBER</RowName>
-      <Row>{props.ticket}</Row>
-      <RowName>ARRIVAL</RowName>
-      <Row>{props.arrival}</Row>
-      <RowName>TYPE</RowName>
-      <Row>{props.type}</Row>
-      <RowName>DRIVERS</RowName>
-      <Row>{props.drivers}</Row>
-      <RowName>TRUCK</RowName>
-      <Row>{props.truck}</Row>
+      <RowName data-cy="row-name">TICKET NUMBER</RowName>
+      <Row data-cy="row-data">{props.ticket}</Row>
+      <RowName data-cy="row-name">ARRIVAL</RowName>
+      <Row data-cy="row-data">{props.arrival}</Row>
+      <RowName data-cy="row-name">TYPE</RowName>
+      <Row data-cy="row-data">{props.type}</Row>
+      <RowName data-cy="row-name">DRIVERS</RowName>
+      <Row data-cy="row-data">{props.drivers}</Row>
+      <RowName data-cy="row-name">TRUCK</RowName>
+      <Row data-cy="row-data">{props.truck}</Row>
     </Wrapper>
   );
 };

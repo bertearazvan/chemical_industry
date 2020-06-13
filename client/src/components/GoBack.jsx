@@ -19,7 +19,7 @@ const Arrow = styled.i`
 const GoBack = () => {
   const history = useHistory();
   return (
-    <GoBackStyle onClick={() => history.goBack()}>
+    <GoBackStyle data-cy="go-back" onClick={() => history.goBack()}>
       <Arrow />
     </GoBackStyle>
   );

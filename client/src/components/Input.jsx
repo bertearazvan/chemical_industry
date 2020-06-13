@@ -21,6 +21,7 @@ const StyledInput = styled.input`
 const Input = (props) => {
   return (
     <StyledInput
+      data-cy="input"
       className="styledInput"
       type={props.type}
       placeholder={props.placeholder}

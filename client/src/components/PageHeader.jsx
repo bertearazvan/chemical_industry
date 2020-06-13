@@ -12,6 +12,6 @@ const StyledHeader = styled.h3`
 `;
 
 const PageHeader = (props) => {
-  return <StyledHeader>{props.name}</StyledHeader>;
+  return <StyledHeader data-cy="header">{props.name}</StyledHeader>;
 };
 export default PageHeader;
