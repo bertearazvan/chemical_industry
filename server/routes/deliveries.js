@@ -67,6 +67,7 @@ router.post(
       let possibleStorage = [];
       let storageToCompare = 0;
       let chemicalsStorage = 0;
+
       if (user[0].warehouse_id === null) {
         //select the depot
         let warehouses = req.deliveryObject.depots[depotId];
@@ -240,6 +241,7 @@ router.post(
                           ].chemicals.find(
                             (chemicalCheck) => chemicalCheck.id === 1
                           );
+
                           if (!forwardNeighbourChem) {
                             addDataToArray();
                             warehouses[i].warehouse_current_storage +=
@@ -271,6 +273,7 @@ router.post(
                             return true;
                           }
                         }
+
                         if (i === Object.keys(warehouses).length) {
                           let beforeNeighbourChem = warehouses[
                             i - 1
@@ -817,6 +820,7 @@ router.post('/deliveries', isAuthenticated, async (req, res) => {
 
     // fire brigade check
     let chemicalAStorage = 0;
+    
     const warehouses = await Warehouse.query()
       .select()
       .where({ depot_id: user[0].depot_id });
@@ -830,6 +834,7 @@ router.post('/deliveries', isAuthenticated, async (req, res) => {
         chemicalAStorage += warehouseStocksA[0].storage_amount;
       }
     }
+    
     if (chemicalAStorage >= 15) {
       let transporter = nodemailer.createTransport(smtpCredentials);
       var mailOptions = {
