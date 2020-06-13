@@ -3,6 +3,20 @@ const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const app = express();
+var fs = require('fs');
+var http = require('http');
+var https = require('https');
+
+
+// ##### Https Setup #####
+
+// var privateKey = fs.readFileSync('server.key', 'utf8');
+// var certificate = fs.readFileSync('server.cert', 'utf8');
+
+// var credentials = { key: privateKey, cert: certificate };
+
+// var httpServer = http.createServer(app);
+// var httpsServer = https.createServer(credentials, app);
 
 // ##### Middleware #####
 app.use(helmet());
@@ -46,7 +60,8 @@ Model.knex(knex);
 
 // ##################
 
-const PORT = process.env.PORT || 9090;
+const PORT = process.env.PORT || 80;
+
 
 app.listen(PORT, (err) => {
   if (err) {
