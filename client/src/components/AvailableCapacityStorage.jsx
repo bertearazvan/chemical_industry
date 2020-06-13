@@ -20,9 +20,9 @@ const RowData = styled.div`
 const AvailableCapacityStorage = (props) => {
   return (
     <Wrapper>
-      <h3>Available Capacity</h3>
+      <h3 data-cy="available-capacity">Available Capacity</h3>
       <RowData>
-        <h4>{props.capacity} barels</h4>
+        <h4 data-cy="available-barels">{props.capacity} barels</h4>
       </RowData>
     </Wrapper>
   );

@@ -123,7 +123,7 @@ router.post('/users/register', (req, res) => {
             .limit(1);
 
           if (existingUser[0]) {
-            return res.status(404).send({
+            return res.status(500).send({
               response: 'User already exists',
             });
           } else {

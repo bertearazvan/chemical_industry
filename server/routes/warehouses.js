@@ -8,7 +8,6 @@ const User = require('../models/User');
 const { isAuthenticated } = require('../middleware/auth');
 
 router.get('/warehouses', isAuthenticated, async (req, res) => {
-
   // get user from DB
   const user = await User.query().select().where({ id: req.userId });
 
@@ -54,10 +53,10 @@ router.get('/warehouses', isAuthenticated, async (req, res) => {
         // we want to select the warehouse from the depot that the user works in
         .where({ depot_id: user[0].depot_id });
 
-        // Here starts the crazyness... 
-        
-        // here we reduce the json we got based on the warehouse_number
-        // in order to have it structured based on warehouse numbers
+      // Here starts the crazyness...
+
+      // here we reduce the json we got based on the warehouse_number
+      // in order to have it structured based on warehouse numbers
       let group = warehouses.reduce((accumulator, warehouse) => {
         accumulator[warehouse.warehouse_number] = [
           warehouse,
@@ -69,8 +68,7 @@ router.get('/warehouses', isAuthenticated, async (req, res) => {
 
       // here we have a for loop that loops through all the warehouses individually
       for (let i = 1; i <= Object.keys(group).length; i++) {
-
-        // reduce() does not work on arrays of 1 elements apparently 
+        // reduce() does not work on arrays of 1 elements apparently
         // so we need to do it manually in the one that have quality
         if (group[i].length === 1) {
           group[i][0].chemicals = [
@@ -80,14 +78,14 @@ router.get('/warehouses', isAuthenticated, async (req, res) => {
             },
           ];
 
-            // the warehouses that have no chemicals also have 1 element in the array.
-            // therefore in order to have structured and consistent data we have to 
-            // make it as an empty array
+          // the warehouses that have no chemicals also have 1 element in the array.
+          // therefore in order to have structured and consistent data we have to
+          // make it as an empty array
           if (group[i][0].chemical === null) {
             group[i][0].chemicals = [];
           }
 
-          // this is done because I noticed sometimes it was returning 
+          // this is done because I noticed sometimes it was returning
           // an array and sometimes was returning an object.
           // This way all of them are arrays of object/s
           group[i] = group[i][0];
@@ -97,8 +95,7 @@ router.get('/warehouses', isAuthenticated, async (req, res) => {
           delete group[i].storage_amount;
           delete group[i].chemical;
         } else {
-
-          // here we want to reduce all the chemicals inside the 
+          // here we want to reduce all the chemicals inside the
           // .chemicals array inside the object.
           // This is ALIEN
           group[i] = group[i].reduce((accumulator, warehouse) => {
@@ -142,7 +139,7 @@ router.get('/warehouses', isAuthenticated, async (req, res) => {
       return res.status(404).send({ response: 'Warehouse was not found.' });
     }
 
-    // we do the same for a warehouse worker, but we care just about 
+    // we do the same for a warehouse worker, but we care just about
     // the warehouse he is part of
     try {
       // we take the same approach as previously

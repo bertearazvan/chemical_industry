@@ -18,7 +18,7 @@ const StyledPageTitle = styled.h4`
 const PageTitle = (props) => {
   return (
     <Wrapper>
-      <StyledPageTitle>{props.name}</StyledPageTitle>
+      <StyledPageTitle data-cy="title">{props.name}</StyledPageTitle>
     </Wrapper>
   );
 };
