@@ -1,11 +1,11 @@
 /// <reference types="cypress" />
 
 context('End to end testing', () => {
-  beforeEach(() => {
-    cy.visit('');
-    cy.viewport(375, 900);
-  });
   describe('Check the flow of the app', () => {
+    beforeEach(() => {
+      cy.visit('');
+      cy.viewport(375, 900);
+    });
     it('should login as a depot worker and check for a ticket number', () => {
       cy.get('[data-cy=input]').first().type('anders');
       cy.get('[data-cy=input]').last().type('password');
